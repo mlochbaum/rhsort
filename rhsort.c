@@ -55,6 +55,7 @@ void rhsort32(void *array, U n) {
     // Bad collision: send chain back to x
     if (RARE(f-j0 >= threshold)) {
       threshold = BLOCK;
+      while (j0 && aux[j0-1]!=s) j0--; // Ensure stability
       T *hj = aux+j0, *hf = aux+f;
       while (hj <= hf-BLOCK) {
         for (U i=0; i<BLOCK; i++) { xb[i]=hj[i]; hj[i]=s; }
