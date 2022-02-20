@@ -2,7 +2,16 @@
 
 Robin Hood Sort is a stable integer sorting algorithm that achieves performance several times better than the state of the art on uniformly random arrays, with worst-case performance similar to a hybrid merge sort.
 
+    Best        Average     Worst       Memory      Stable      Deterministic
+    n           n           n log n     n           Yes         Yes
+
 The version given here is not well-tested, is only written for 4-byte integers, and will definitely fail on arrays containing the maximum possible integer. Please don't use it directly. The main purpose of this repository is to show the radix sort people that a great benchmark on random data doesn't mean much. The main purpose of Robin Hood sort is to be used as a possible base case in quicksort algorithms like fluxsort and pdqsort, in order to take advantage of ranges where a uniform distribution seems likely.
+
+![Performance bar chart](images/wolf.svg)
+
+Above, Robin Hood is tested against the fastest sorting algorithms I know (single-core IPS⁴o isn't great on random data and didn't make the cut), on [wolfsort](https://github.com/scandum/wolfsort)'s own benchmark suite. On the headline benchmark, there's no contest! How did that happen? Well, Robin Hood is very skilled—don't forget it—but his greatest skill is cheating.
+
+*Don't worry too much about the bad cases, unless of course you want to use RH on its own, which you shouldn't. Flux/wolfsort have a special analysis pass to use quadsort for most of these, and "generic order" uses a small range, which can easily be detected and obliterated by counting sort. "ascending tiles" hints at a more significant problem, which is that the range can be split into several small clusters. When hybridized with quicksort, it should mostly be possible to rule these cases out during median selection, and quicksort partitioning naturally splits off clusters, which could then be passed to RH.*
 
 ### Algorithm
 
