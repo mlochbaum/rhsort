@@ -5,6 +5,12 @@
 
 #include "rhsort.c"
 
+static U monoclock(void) {
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return 1000000000*ts.tv_sec + ts.tv_nsec;
+}
+
 void merge32(T *x, U n) {
   T *aux = malloc(n*sizeof(T));
   for (U w=1; w<n; w*=2)
@@ -21,14 +27,21 @@ int cmpi(const void * a, const void * b) {
 void main(int argc, char **argv) {
   // Command-line arguments are max or min,max
   // Inclusive range, with sizes 10^n tested
-  U min=3, max=6;
+  U min=3, max=6; int ls=0;
   if (argc>1) {
-    max=atoi(argv[argc-1]);
-    if (argc>2) min=atoi(argv[argc-2]);
+    ls = argv[1][0]=='l';
+    if (ls) {
+      // Log line chart 100 to 1e7 with 35 points, plus 4 before for warmup
+      min=0; max=39;
+    } else {
+      max=atoi(argv[argc-1]);
+      if (argc>2) min=atoi(argv[argc-2]);
+    }
   }
 
   U sizes[max+1];
-  for (U k=0,n=1; k<=max; k++,n*=10) sizes[k]=n;
+  if (!ls) { for (U k=0,n=1 ; k<=max; k++,n*=10  ) sizes[k]=n; }
+  else     { for (U k=0,n=28; k<=max; k++,n*=1.39) sizes[k]=n; sizes[max]=10000000; }
 
   U s = sizes[max]*sizeof(T);
   T *data = malloc(s), // Saved random data
@@ -48,16 +61,16 @@ void main(int argc, char **argv) {
     }
     // Time
     U iter = 1+2000000/n;
-    clock_t sum=0, best=0;
+    U sum=0, best=0;
     for (U r=0; r<iter; r++) {
       memcpy(sort, data, s);
-      clock_t t = clock();
+      U t = monoclock();
       rhsort32(sort, n);
-      t = clock()-t;
+      t = monoclock()-t;
       sum += t;
       if (r==0||t<best) best=t;
     }
-    printf("best: %f avg: %f", (double)best/CLOCKS_PER_SEC, (double)sum/(iter*CLOCKS_PER_SEC));
+    printf("best:%7.3f avg:%7.3f ns/v", (double)best/n, (double)sum/(iter*n));
     printf("\n");
   }
 }
