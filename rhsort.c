@@ -96,9 +96,9 @@ void rhsort32(T *array, U n) {
   #undef POS
 
   // Move all values from the buffer back to the array
-  // The if (...) xt++ part should be done branchlessly
+  // Use xt += to convince the compiler to make it branchless
   while (aux[--sz] == s); sz++;
-  T *xt=xb; for (U i=0; i<sz; i++) if ((*xt=aux[i])!=s) xt++;
+  T *xt=xb; for (U i=0; i<sz; i++) xt += s!=(*xt=aux[i]);
 
   // Merge stolen blocks back in if necessary
   U l = xb-x;  // Size of those blocks
