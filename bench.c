@@ -5,6 +5,14 @@
 
 #include "rhsort.c"
 
+void merge32(T *x, U n) {
+  T *aux = malloc(n*sizeof(T));
+  for (U w=1; w<n; w*=2)
+    for (U i=0, ww=2*w; i<n-w; i+=ww)
+      merge(x+i, w, n-i<ww?n-i:ww, aux);
+  free(aux);
+}
+
 // For qsort
 int cmpi(const void * a, const void * b) {
 	return *(T*)a - *(T*)b;
