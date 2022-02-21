@@ -43,7 +43,7 @@ void rhsort32(T *array, U n) {
   T s = max+1;                          // Sentinel value
   U r = (U)(unsigned int)(max-min) + 1; // Size of range
   U sh = 0;                             // Contract to fit range
-  while (r>4*n) { sh++; r>>=1; }        // Shrink to stay at O(n) memory
+  while (r>5*n) { sh++; r>>=1; }        // Shrink to stay at O(n) memory
   // Goes down to BLOCK once we know we have to merge
   U threshold = 2*BLOCK;
   U sz = r + threshold;                 // Buffer size
