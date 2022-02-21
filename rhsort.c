@@ -7,10 +7,10 @@ typedef size_t U;
 #define RARE(X) __builtin_expect(X,0)
 
 // Minimum size to steal from buffer
-const U BLOCK = 16;
+static const U BLOCK = 16;
 
 // Merge arrays of length l and n-l starting at a, using buffer aux.
-void merge(T *a, U l, U n, T *aux) {
+static void merge(T *a, U l, U n, T *aux) {
   // Easy cases when the merge can be avoided
   // If the buffer helping at all, most merges go through these
   if (a[l-1] <= a[l]) return;
@@ -30,7 +30,7 @@ void merge(T *a, U l, U n, T *aux) {
 }
 
 // The main attraction. Sort array of ints with length n.
-void rhsort32(void *array, U n) {
+void rhsort32(T *array, U n) {
   T *x = array, *xb=x;  // Stolen blocks go to xb
 
   // Find the range.
