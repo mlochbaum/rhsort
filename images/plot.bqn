@@ -39,8 +39,7 @@ Elt ← {∾⟨"<",𝕩,"/>"⟩}Attr
 FmtNum ← (∧`4⥊⟜1⊸»'.'⊸≠)⊸/∘•Repr⚇0
 Pos ← ⟨"x","y"⟩ ≍˘ FmtNum
 SVG ← {
-  n ← FmtNum 𝕨
-  a ← ⟨"viewBox",1↓∾' '∾¨n⟩∾"height"‿"width"≍˘⌽2↓n
+  a ← ⟨"viewBox",1↓∾' '∾¨FmtNum 𝕨⟩∾"height"‿"width"≍˘FmtNum 1.5×⌽2↓𝕨
   a ∾↩ "xmlns"‿"http://www.w3.org/2000/svg"
   ("svg" Attr a) Enc 𝕩
 }
@@ -83,7 +82,7 @@ legend ← (ltr∾"|text-anchor=start|font-size=13px") Ge ⟨
 •Out¨ (0‿0∾wh) SVG "text-anchor=middle|font-size=14px|fill=#111" Ge ∾⥊¨ ⟨
   <"fill=white" Rect 0‿0≍wh
   ⟨20,h0-37⟩ TT "The Big Bad Wolfsort benchmark"
-  ⟨15,h0-14⟩ TT "Sorting 100,000 4-byte integers"
+  ⟨15,h0-14⟩ TT "Sort 100,000 4-byte integers, average of 100"
   ⟨15,h1+31⟩ TT "Nanoseconds per element"
   ⟨11,h1+51⟩ TT "i5-6200U CPU @ 2.30GHz; compiled with g++ -O3"
   "stroke-width=0.3|stroke=#555" Ge ("path"Elt"d"⋈·∾"M v"∾¨·FmtNum∾⟜h0‿ph)¨ 1↓tpos
