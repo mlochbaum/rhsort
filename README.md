@@ -2,8 +2,8 @@
 
 Robin Hood Sort is a stable integer sorting algorithm that achieves performance several times better than the state of the art on uniformly random arrays, with worst-case performance similar to a hybrid merge sort.
 
-    Best    Average            Worst      Memory     Stable     Deterministic
-    n       n log log log n    n log n    n          Yes        Yes
+    Best     Average        Worst       Memory      Stable      Deterministic
+    n        n log log n    n log n     n           Yes         Yes
 
 The version given here is not well-tested, is only written for 4-byte integers, and will definitely fail on arrays containing the maximum possible integer. Please don't use it directly. The main purpose of this repository is to show the radix sort people that a great benchmark on random data doesn't mean much. The main purpose of Robin Hood sort is to be used as a possible base case in quicksort algorithms like fluxsort and pdqsort, in order to take advantage of ranges where a uniform distribution seems likely and beat those radix sorts once and for all.
 
@@ -25,7 +25,7 @@ Stealing happens after a value is inserted to the buffer. It's triggered based o
 
 ### Analysis
 
-Here we'll show that Robin Hood Sort can achieve O(n log log log n) *average* time on random arrays with range at least twice the length (for smaller ranges, use counting/bucket sort and get guaranteed O(n) time), and O(n log(n)) worst-case time. The average case has three logs, which is quite a lot: sorting a quadrillion elements? Oh, that'll cost you an extra factor of 1.26. For practical purposes RH should be considered linear-time on random data.
+Here we'll show that Robin Hood Sort can achieve O(n log log n) *average* time on random arrays with range at least twice the length (for smaller ranges, use counting/bucket sort and get guaranteed O(n) time), and O(n log(n)) worst-case time. For practical purposes, that average time is effectively linear. Unfortunately, for practical purposes it's also not achieved: these times are based on the typical random-access model where reading or writing any value in memory takes constant time. Real-world random access scales more like `√n`, and this causes RH sort to lose ground against quicksorts as `n` increases, instead of gaining as theory would suggest.
 
 Here are the steps we need to consider:
 * Find the minimum and maximum
@@ -43,26 +43,12 @@ Merge sort has a well known worst case bound of O(n log n). This is where most o
 
 #### Average case
 
-The `n log log log n` bound on average time requires setting a variable block size. However, an adequate block size is `log log log n`, meaning that a block size of 16 carries us through to `n = 2^2^2^16`, which is not physically attainable. So rhsort.c doesn't bother to change the block size.
+The `n log log n` bound on average time requires setting a variable block size. But the size scales with `log log n`, that is, it hardly scales at all. And it's silly to apply RH sort to very large random arrays anyway because the cache patterns are horrible. So I'm sticking with a fixed block size in the actual implementation.
 
-From the [paper introducing Robin Hood hashing](https://cs.uwaterloo.ca/research/tr/1986/CS-86-14.pdf), the probability that a search in a table with load factor `α` probes at least `i` entries is `pᵢ(α)`, satisfying
+From lemma 5.4 [here](http://opendatastructures.org/ods-python/5_2_LinearHashTable_Linear_.html), the probability that a chain of length `k` starts at any particular position is at most `cᵏ`, for a constant `c` that depends on the load factor. A random position hits such a chain with probability proportional to its length, so that the total expected number of elements moved on one insertion is `n*b²*c^-b` (we also need to consider chains longer than `b`, but these only contribute a constant factor). Setting `b = 2*log_c(log₂(n))`, `c^-b` is `1/log²(n)`, giving size of `n*b²/log²n < n/log n`. Now the total asymptotic cost is the cost of insertions plus the cost of merge sorting those blocks:
 
-    p₁(α) = 1
-    pᵢ₊₁(α) = 1 - ((1-α)/α) * (e^(α*(p₁(α)+…+pᵢ(α))) - 1)
+    cost < n*b + (n/log n)log(n/log n)
+         < n*b + (n/log n)log(n)
+         = n*b + n
 
-Fixing our maximum load factor of `α = 1/2` and doing a lot of math, this reduces to the following recurrence, where the error term `eᵢ` gives the distance from the sum of `pᵢ` to its limit and `expm1(x) := e^x - 1`.
-
-    pᵢ = -2*expm1(eᵢ)
-    e₁ = -ln(2)
-    eᵢ₊₁ = eᵢ-expm1(eᵢ)
-
-Expanding that last, `x-expm1(x)` is `(1+x) - e^x`. This function maintains the invariant `-1 < eᵢ < 0`, and on this interval it's closer to zero than the function `f(x) = -x²/2`. Consequently, `(-eᵢ) < 2^-(2^i)` for large enough `i`, specifically `i>1`, and `pᵢ < 2*-eᵢ` satisfies `pᵢ < 2^-(2^i)`, this time for `i>2`.
-
-So the probability that a probe of length `b` is performed is `2^-2^b`, and this should mean that the total size of moved blocks is `n*b*2^-2^b` (I haven't proved the validity of going from probe lengths to blocks moved here, but it seems very likely). Setting `b = log₂(log₂(log₂(n)))`, `2^-2^b` is `2^-log(log(n)) = 1/log(n)`, giving size of `n*b/log n`. Now the total asymptotic cost is the cost of insertions plus the cost of merge sorting those blocks:
-
-    cost = n*b + (n*b/log n)log(n*b/log n)
-         < n*b + (n*b/log n)log(n)
-         = n*b + n*b
-         = 2 * n * log log log n
-
-And that's our average-case performance bound!
+The total time is now proportional to `n log log n`.
