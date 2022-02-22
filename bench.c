@@ -5,18 +5,49 @@
 
 #include "rhsort.c"
 
+#if QUADSORT || FLUXSORT || WOLFSORT
+#define cmp(a,b) (*(a) > *(b))
+#include "wolfsort/src/quadsort.h"
+#endif
+
+#if FLUXSORT || WOLFSORT
+#include "wolfsort/src/fluxsort.h"
+#endif
+
+#if WOLFSORT
+#include "wolfsort/src/wolfsort.h"
+#elif PDQSORT
+#include "wolfsort/src/pdqsort.h"
+#elif SKASORT
+#include "wolfsort/src/ska_sort.hpp"
+#endif
+
 static U monoclock(void) {
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
   return 1000000000*ts.tv_sec + ts.tv_nsec;
 }
 
-void merge32(T *x, U n) {
+static void sort32(T *x, U n) {
+#if MERGESORT
   T *aux = malloc(n*sizeof(T));
   for (U w=1; w<n; w*=2)
     for (U i=0, ww=2*w; i<n-w; i+=ww)
       merge(x+i, w, n-i<ww?n-i:ww, aux);
   free(aux);
+#elif QUADSORT
+  return quadsort32(x, n, NULL);
+#elif FLUXSORT
+  return fluxsort32(x, n, NULL);
+#elif WOLFSORT
+  return wolfsort(x, n, 4, NULL);
+#elif SKASORT
+  return ska_sort(x, x+n);
+#elif PDQSORT
+  return pdqsort(x, x+n);
+#else
+  return rhsort32(x, n);
+#endif
 }
 
 // For qsort
@@ -24,7 +55,7 @@ int cmpi(const void * a, const void * b) {
 	return *(T*)a - *(T*)b;
 }
 
-void main(int argc, char **argv) {
+int main(int argc, char **argv) {
   // Command-line arguments are max or min,max
   // Inclusive range, with sizes 10^n tested
   U min=3, max=6; int ls=0;
@@ -51,21 +82,23 @@ void main(int argc, char **argv) {
   for (U k=min, n=0; k<=max; k++) {
     for (U e=sizes[k]; n<e; n++) data[n]=rand();
     s = n*sizeof(T);
-    printf("Testing size %8d: ", n);
+    printf("Testing size %8ld: ", n);
     // Test
-    memcpy(sort, data, s); rhsort32(sort, n);
-    memcpy(chk , data, s);  qsort  (chk , n, sizeof(T), cmpi);
+#ifndef NOTEST
+    memcpy(sort, data, s); sort32(sort, n);
+    memcpy(chk , data, s); qsort(chk, n, sizeof(T), cmpi);
     for (U i=0; i<n; i++) if (sort[i]!=chk[i]) {
-      printf("Fails at [%d]: %d but should be %d! ", i, sort[i], chk[i]);
+      printf("Fails at [%ld]: %d but should be %d! ", i, sort[i], chk[i]);
       break;
     }
+#endif
     // Time
     U iter = 1+2000000/n;
     U sum=0, best=0;
     for (U r=0; r<iter; r++) {
       memcpy(sort, data, s);
       U t = monoclock();
-      rhsort32(sort, n);
+      sort32(sort, n);
       t = monoclock()-t;
       sum += t;
       if (r==0||t<best) best=t;
@@ -73,4 +106,5 @@ void main(int argc, char **argv) {
     printf("best:%7.3f avg:%7.3f ns/v", (double)best/n, (double)sum/(iter*n));
     printf("\n");
   }
+  return 0;
 }
