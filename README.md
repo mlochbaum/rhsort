@@ -1,11 +1,11 @@
 # Robin Hood Sort: the algorithm for uniform data
 
-Robin Hood Sort is a stable integer sorting algorithm that achieves performance several times better than the state of the art on uniformly random arrays, with worst-case performance similar to a hybrid merge sort.
+Robin Hood Sort is a stable numeric sorting algorithm that achieves performance several times better than the state of the art on uniformly random arrays, with worst-case performance similar to a hybrid merge sort.
 
     Best     Average        Worst       Memory      Stable      Deterministic
     n        n log log n    n log n     n           Yes         Yes
 
-The version given here is not well-tested, is only written for 4-byte integers, and will definitely fail on arrays containing the maximum possible integer. Please don't use it directly. The main purpose of this repository is to show the radix sort people that a great benchmark on random data doesn't mean much. The main purpose of Robin Hood sort is to be used as a possible base case in quicksort algorithms like fluxsort and pdqsort, in order to take advantage of ranges where a uniform distribution seems likely and beat those radix sorts once and for all.
+The version given here is not well-tested, is only written for 4-byte integers, and will definitely fail on arrays containing both the minimum and maximum possible integer. Please don't use it directly. The main purpose of this repository is to show the radix sort people that a great benchmark on random data doesn't mean much. The main purpose of Robin Hood sort is to be used as a possible base case in quicksort algorithms like fluxsort and pdqsort, in order to take advantage of ranges where a uniform distribution seems likely and beat those radix sorts once and for all.
 
 Compared below are merge sort [quadsort](https://github.com/scandum/quadsort), top-of-the-line hybrid quicksorts [pdqsort](https://github.com/orlp/pdqsort) and [fluxsort](https://github.com/scandum/fluxsort), and radix sorts [wolfsort](https://github.com/scandum/wolfsort) (also a bit of a hybrid) and [ska_sort](https://probablydance.com/2017/01/17/faster-sorting-algorithm-part-2/). If you're wondering, Timsort is no good with integer arrays like this, and single-core IPS⁴o loses to the quicksorts on random data. Run on your machine with `$ ./wolfbench.sh` to download the sorts and build, then `$ ./runwolfbench` to perform the benchmark.
 
@@ -13,7 +13,7 @@ Compared below are merge sort [quadsort](https://github.com/scandum/quadsort), t
 
 So Robin Hood is tested against the fastest sorting algorithms I know, on wolfsort's own benchmark suite. On the headline benchmark, there's no contest! Surprised? Well, Robin Hood is very skilled—don't forget it—but his greatest skill is cheating.
 
-*Don't worry too much about the bad cases, unless of course you want to use RH on its own, which you shouldn't. Flux/wolfsort have a special analysis pass to use quadsort for most of these, and "generic order" uses a small range, which can easily be detected and obliterated by counting sort. "ascending tiles" hints at a more significant problem, which is that the range can be split into several small clusters. When hybridized with quicksort, it should mostly be possible to rule these cases out during median selection, and quicksort partitioning naturally splits off clusters, which could then be passed to RH.*
+*Don't worry too much about these specific bad cases, unless of course you want to use RH on its own, which you shouldn't. Flux/wolfsort have a special analysis pass to use quadsort for most of these, and "generic order" uses a small range, which can easily be detected and obliterated by counting sort. "ascending tiles" hints at a more significant problem, which is that the range can be split into several small clusters. When hybridized with quicksort, it should mostly be possible to rule these cases out during median selection, and quicksort partitioning naturally splits off clusters, which could then be passed to RH.*
 
 ### Algorithm
 
@@ -25,7 +25,7 @@ Stealing happens after a value is inserted to the buffer. It's triggered based o
 
 ### Analysis
 
-Here we'll show that Robin Hood Sort can achieve O(n log log n) *average* time on random arrays with range at least twice the length (for smaller ranges, use counting/bucket sort and get guaranteed O(n) time), and O(n log(n)) worst-case time. For practical purposes, that average time is effectively linear. Unfortunately, for practical purposes it's also not achieved: these times are based on the typical random-access model where reading or writing any value in memory takes constant time. Real-world random access scales more like `√n`, and this causes RH sort to lose ground against quicksorts as `n` increases, instead of gaining as theory would suggest.
+Here we'll show that Robin Hood Sort can achieve O(n log log n) *average* time on random arrays with range at least twice the length (for smaller ranges, use counting/bucket sort and get guaranteed O(n) time), and O(n log(n)) worst-case time. And that it's stable. For practical purposes, that average time is effectively linear. Unfortunately, for practical purposes it's also not achieved: these times are based on the typical random-access model where reading or writing any value in memory takes constant time. Real-world random access scales more like `√n`, and this causes RH sort to lose ground against quicksorts as `n` increases, instead of gaining as theory would suggest.
 
 Here are the steps we need to consider:
 * Find the minimum and maximum
@@ -52,3 +52,13 @@ From lemma 5.4 [here](http://opendatastructures.org/ods-python/5_2_LinearHashTab
          = n*b + n
 
 The total time is now proportional to `n log log n`.
+
+#### Stability
+
+Sorting stability means that two equal values in the initial array maintain their order in the sorted array, that is, a value with a lower index isn't swapped with an equal value with a higher index. For the function `rhsort32` implemented here, it's meaningless: an integer can't remember where it came from. However, stability can be important when sorting one array of keys according to another array of values. Robin Hood Sort could probably be adapted to this use case, so it's nice that it's stable without any performance cost.
+
+During buffer insertion, the values in the buffer have lower indices than those yet to be inserted. So an inserted value needs to be placed after any equal values it encounters. Easy enough; this way less values need to be shifted anyway.
+
+Stolen values are placed at the beginning of the array, which doesn't reorder them with respect to an uninserted values but could break ordering with respect to the buffer. Equal values are always adjacent in the buffer, so we just need to be sure Robin Hood doesn't grab a trailing component of a group of equal values. The fix is to walk back to the beginning of the chain (or at least the previous unequal value, but this benchmarks worse) before stealing.
+
+After insertion, filtering is obviously stable, and merging is well known to be stable.
