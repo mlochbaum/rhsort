@@ -23,7 +23,7 @@ col ← "stroke"⊸⋈¨ colors ← ni⊏colorlist∾<"black"
 names ← rhf ⊣◶⟨⊢∾"sort"∾"_copy"/˜"ska_"⊸≡,"Robin Hood"⟩¨ fname
 
 width ← 512
-off ← 50‿40 ⋄ end ← 20‿36
+off ← 50‿40 ⋄ end ← 20‿46
 padi  ← 0‿20
 
 gr ← "stroke-width=1.2|font-size=14px|text-anchor=middle"
@@ -35,12 +35,12 @@ out ← (-off)≍dim+off+end
 Scale ← padi+(dim-2×padi)× ({¬𝕏}⌾(1⊸⊑) {𝕩÷˜𝕨-˜⊢}´¨ win) {𝕎𝕩}¨ ⊢
 line ← (/≠¨⊏xy) ⊔ Num ⍉> Scale pts
 
-ls ← 18
-lh ← ls×1+↕n
+ls ← 18 ⋄ lp ← 6
+lh ← lp+ls×0.5+↕n
 lw ← 134
-ld ← ⟨lw,ls×1+n⟩
+ld ← ⟨lw,(2×lp)+ls×n⟩
 rhs ← (At"font-weight=bold|stroke-width=0.6|stroke=#211")∾"fill"⋈¯1⊑colorlist
-ltr ← "transform=translate("∾")"∾˜∾⟜","⊸∾´Num dim-10+ld
+ltr ← "transform=translate("∾")"∾˜∾⟜","⊸∾´Num 10‿6
 legend ← (ltr∾"|text-anchor=start|font-size=13px") Ge ⟨
   "fill=white|stroke=#111" Rect 0‿0≍ld
   "stroke-width=2.6" Ge col ≍⊸Path⟜(∾"M h"∾¨Num)¨ (8∾∾⟜22)¨ lh

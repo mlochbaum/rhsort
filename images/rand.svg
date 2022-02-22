@@ -1,6 +1,6 @@
-<svg viewBox='-50 -40 582 357.6' height='536.400' width='873' xmlns='http://www.w3.org/2000/svg'>
+<svg viewBox='-50 -40 582 367.6' height='551.400' width='873' xmlns='http://www.w3.org/2000/svg'>
   <g stroke-width='1.2' font-size='14px' text-anchor='middle'>
-    <rect fill='white' x='-50' y='-40' width='582' height='357.6'/>
+    <rect fill='white' x='-50' y='-40' width='582' height='367.6'/>
     <text dy='0.33em' font-size='18px' x='256' y='-19'>Sorting random 4-byte integers</text>
     <text dy='1em' x='256' y='297.6'>Size</text>
     <text transform='rotate(-90)' dy='-0.35em' x='-140.8' y='-22'>Time (ns / value)</text>
@@ -43,18 +43,18 @@
       <path stroke='#24851d' d='M0 224.206L14.644 233.419L29.241 245.349L43.841 242.761L58.423 255.867L73.061 248.006L87.667 260.891L102.310 248.052L116.948 261.6L131.571 247.867L146.207 258.968L160.847 242.923L175.487 251.568L190.129 232.542L204.773 226.330L219.415 218.452L234.059 212.962L248.704 205.942L263.347 205.680L277.991 193.872L292.636 200.605L307.280 194.158L321.925 183.800L336.569 183.993L351.214 152.807L365.859 150.117L380.503 110.533L395.148 113.690L409.793 83.990L424.437 95.427L439.082 70.428L453.727 76.010L468.372 63.300L483.016 67.345L497.661 49.838L512 54.975'/>
     </g>
     <rect stroke='#111' fill='none' x='0' y='0' width='512' height='281.6'/>
-    <g transform='translate(368,181.6)' text-anchor='start' font-size='13px'>
-      <rect fill='white' stroke='#111' x='0' y='0' width='134' height='90'/>
+    <g transform='translate(10,6)' text-anchor='start' font-size='13px'>
+      <rect fill='white' stroke='#111' x='0' y='0' width='134' height='84'/>
       <g stroke-width='2.6'>
-        <path stroke='#b9e' d='M8 18h22'/>
-        <path stroke='#cc6' d='M8 36h22'/>
-        <path stroke='#da4' d='M8 54h22'/>
-        <path stroke='#24851d' d='M8 72h22'/>
+        <path stroke='#b9e' d='M8 15h22'/>
+        <path stroke='#cc6' d='M8 33h22'/>
+        <path stroke='#da4' d='M8 51h22'/>
+        <path stroke='#24851d' d='M8 69h22'/>
       </g>
-      <text dy='0.33em' x='36' y='18'>fluxsort</text>
-      <text dy='0.33em' x='36' y='36'>wolfsort</text>
-      <text dy='0.33em' x='36' y='54'>ska_sort_copy</text>
-      <text dy='0.33em' font-weight='bold' stroke-width='0.6' stroke='#211' fill='#24851d' x='36' y='72'>Robin Hood</text>
+      <text dy='0.33em' x='36' y='15'>fluxsort</text>
+      <text dy='0.33em' x='36' y='33'>wolfsort</text>
+      <text dy='0.33em' x='36' y='51'>ska_sort_copy</text>
+      <text dy='0.33em' font-weight='bold' stroke-width='0.6' stroke='#211' fill='#24851d' x='36' y='69'>Robin Hood</text>
     </g>
   </g>
 </svg>
