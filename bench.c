@@ -55,6 +55,8 @@ int cmpi(const void * a, const void * b) {
 	return *(T*)a - *(T*)b;
 }
 
+static U n_iter(U n) { return 1+2000000/n; }
+
 int main(int argc, char **argv) {
   // Command-line arguments are max or min,max
   // Inclusive range, with sizes 10^n tested
@@ -74,13 +76,15 @@ int main(int argc, char **argv) {
   if (!ls) { for (U k=0,n=1 ; k<=max; k++,n*=10  ) sizes[k]=n; }
   else     { for (U k=0,n=28; k<=max; k++,n*=1.39) sizes[k]=n; sizes[max]=10000000; }
 
-  U s = sizes[max]*sizeof(T);
+  U s=sizes[max]; s+=n_iter(s)-1; s*=sizeof(T);
   T *data = malloc(s), // Saved random data
     *sort = malloc(s), // Array to be sorted
     *chk  = malloc(s); // For checking with qsort
   srand(time(NULL));
-  for (U k=min, n=0; k<=max; k++) {
-    for (U e=sizes[k]; n<e; n++) data[n]=rand();
+  for (U k=min, m=0; k<=max; k++) {
+    U n = sizes[k];
+    U iter = n_iter(n), off = max-k;
+    for (U e=n+off+iter-1; m<e; m++) data[m]=rand();
     s = n*sizeof(T);
     printf("Testing size %8ld: ", n);
     // Test
@@ -93,10 +97,9 @@ int main(int argc, char **argv) {
     }
 #endif
     // Time
-    U iter = 1+2000000/n;
     U sum=0, best=0;
     for (U r=0; r<iter; r++) {
-      memcpy(sort, data, s);
+      memcpy(sort, data+off+r, s);
       U t = monoclock();
       sort32(sort, n);
       t = monoclock()-t;

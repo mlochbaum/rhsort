@@ -47,7 +47,7 @@ legend ← (ltr∾"|text-anchor=start|font-size=13px") Ge ⟨
   (rhs⊸∾¨⌾(rhf⊸/)36 Pos∘⋈¨lh) ("text"Attr"dy"‿"0.33em"⊸∾)⊸Enc¨ names
 ⟩
 
-tpos ← Scale ⋆⁼ ticks ← ⟨10⋆2+↕6, 5∾10×1+↕9⟩
+tpos ← Scale ⋆⁼ ticks ← ⟨10⋆2+↕6, 5∾10×1+↕7⟩
 DT ← {
   P ← ('h'=𝕨)◶⟨∾⟜(0‿1×dim),¯1⌽∾⟜(1‿0×dim)⟩
   ("path"Elt"d"⋈·∾("M "∾𝕨)∾¨Num∘P)¨ 𝕩
@@ -63,7 +63,7 @@ DT ← {
   "stroke-width=0.3|stroke=#555" Ge "vh" DT¨ (¯1↓1↓⊢)⌾⊑ tpos
   "font-size=11px" Ge ⟨
     tpos ("text"Attr·Pos⋈⟜((1⊑dim)+13))⊸Enc¨⟜(1e3⊸<◶Num‿("1e"∾'0'+·⌊0.5+10⋆⁼⊢)¨)○⊑ ticks
-    "text-anchor=end" Ge tpos (Text·Pos ¯6⊸⋈)⊸Enc¨⟜Num○(¯1↓1⊸⊑) ticks
+    "text-anchor=end" Ge tpos (Text·Pos ¯6⊸⋈)⊸Enc¨⟜Num○(1⊸⊑) ticks
   ⟩
   "stroke-width=2.6|fill=none" Ge col ≍⊸Path⟜('M'⌾⊑∘∾·⥊ "L "∾¨⎉1⊢)¨ line
   <"stroke=#111|fill=none" Rect 0‿0≍dim
