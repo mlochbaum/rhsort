@@ -50,7 +50,7 @@ ltr ← "transform=translate("∾")"∾˜∾⟜","⊸∾´Num ⟨w0+tw-10+lw,h0+
 legend ← (ltr∾"|text-anchor=start|font-size=13px") Ge ⟨
   "fill=white|stroke=#111" Rect 0‿0≍⟨lw,ls×1+nn⟩
   "stroke=#111" Ge colors "fill"⊸⋈⊸("rect" Elt ∾⟜Rdim)⟜{10‿𝕩≍18‿bt}¨ lh-bt÷2
-  (rhs⊸∾⌾(¯1⊸⊑)36 Pos∘⋈¨lh) Text⊸Enc¨ "Robin Hood"⌾(¯1⊸⊑)names
+  (rhs⊸∾⌾(¯1⊸⊑)36 Pos∘⋈¨lh) Text⊸Enc¨ ∾⟜"_copy"⍟("ska_sort"⊸≡)¨ "Robin Hood"⌾(¯1⊸⊑)names
 ⟩
 
 •Out¨ (0‿0∾wh) SVG "text-anchor=middle|font-size=14px|fill=#111" Ge ∾⥊¨ ⟨

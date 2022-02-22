@@ -1,5 +1,5 @@
 diff --git a/src/bench.c b/src/bench.c
-index 9cf9ef4..cdc2d51 100644
+index 9cf9ef4..e123916 100644
 --- a/src/bench.c
 +++ b/src/bench.c
 @@ -57,8 +57,10 @@
@@ -25,26 +25,30 @@ index 9cf9ef4..cdc2d51 100644
  				case 'b':
  					blitsort(array, max, size, cmpf);
  					break;
-@@ -247,6 +253,9 @@ void test_sort(void *array, void *unsorted, void *valid, int minimum, int maximu
+@@ -247,6 +253,13 @@ void test_sort(void *array, void *unsorted, void *valid, int minimum, int maximu
  					break;
  
  				case 's':
 +					if (name[1]=='k')
-+						ska_sort(pta, pta+max);
++					{
++						int *aux = malloc(max*sizeof(T));
++						ska_sort_copy(pta, pta+max, aux);
++						free(aux);
++					}
 +					else
  #ifdef STDSORT_H
  
  					if (size == sizeof(int))
-@@ -593,7 +602,7 @@ int main(int argc, char **argv)
+@@ -593,7 +606,7 @@ int main(int argc, char **argv)
  	long double *da_array, *dr_array, *dv_array;
  
  	char dist[100];
 -	char *sorts[] = { "+", "stablesort", "blitsort", "quadsort", "gridsort", "fluxsort", "wolfsort" };
-+	char *sorts[] = { "+", "quadsort", "pdqsort", "fluxsort", "wolfsort", "skasort", "rhsort" };
++	char *sorts[] = { "+", "quadsort", "pdqsort", "fluxsort", "wolfsort", "ska_sort", "rhsort" };
  //	char *sorts[] = { "+", "timsort", "stablesort", "quadsort", "gridsort", "fluxsort", "wolfsort" };
  
  	if (argc >= 1 && argv[1] && *argv[1])
-@@ -664,6 +673,7 @@ int main(int argc, char **argv)
+@@ -664,6 +677,7 @@ int main(int argc, char **argv)
  	}
  #endif
  
@@ -52,7 +56,7 @@ index 9cf9ef4..cdc2d51 100644
  	// 128 bit
  
  	da_array = (long double *) malloc(max * sizeof(long double));
-@@ -734,6 +744,7 @@ int main(int argc, char **argv)
+@@ -734,6 +748,7 @@ int main(int argc, char **argv)
  	free(la_array);
  	free(lr_array);
  	free(lv_array);

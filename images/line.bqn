@@ -19,8 +19,8 @@ dat ← ⍉∘Read¨ input
 namelist  ← "quad"‿"pdq" ‿"flux"‿"wolf"‿"ska_"‿"rh"
 colorlist ← "#6ad"‿"#c7d"‿"#b9e"‿"#cc6"‿"#da4"‿"#24851d"
 rhf ← (1-˜≠namelist) = ni ← namelist ⊐fname
-col ← "stroke"⊸⋈¨ colors ← ni⊏colorlist
-names ← rhf ⊣◶⟨⊢∾"sort"˙,"Robin Hood"⟩¨ fname
+col ← "stroke"⊸⋈¨ colors ← ni⊏colorlist∾<"black"
+names ← rhf ⊣◶⟨⊢∾"sort"∾"_copy"/˜"ska_"⊸≡,"Robin Hood"⟩¨ fname
 
 width ← 512
 off ← 50‿40 ⋄ end ← 20‿36

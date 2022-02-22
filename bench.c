@@ -18,7 +18,7 @@
 #include "wolfsort/src/wolfsort.h"
 #elif PDQSORT
 #include "wolfsort/src/pdqsort.h"
-#elif SKASORT
+#elif SKASORT || SKACOPY
 #include "wolfsort/src/ska_sort.hpp"
 #endif
 
@@ -36,17 +36,21 @@ static void sort32(T *x, U n) {
       merge(x+i, w, n-i<ww?n-i:ww, aux);
   free(aux);
 #elif QUADSORT
-  return quadsort32(x, n, NULL);
+  quadsort32(x, n, NULL);
 #elif FLUXSORT
-  return fluxsort32(x, n, NULL);
+  fluxsort32(x, n, NULL);
 #elif WOLFSORT
-  return wolfsort(x, n, 4, NULL);
+  wolfsort(x, n, 4, NULL);
 #elif SKASORT
-  return ska_sort(x, x+n);
+  ska_sort(x, x+n);
+#elif SKACOPY
+  uint32_t *aux = malloc(n*sizeof(T));
+  ska_sort_copy((uint32_t*)x, (uint32_t*)x+n, aux);
+  free(aux);
 #elif PDQSORT
-  return pdqsort(x, x+n);
+  pdqsort(x, x+n);
 #else
-  return rhsort32(x, n);
+  rhsort32(x, n);
 #endif
 }
 

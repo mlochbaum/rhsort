@@ -1,5 +1,7 @@
 #! /bin/sh
 
+set -e
+
 if [ ! -d wolfsort ]
 then
   git clone https://github.com/scandum/wolfsort.git
