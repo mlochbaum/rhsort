@@ -62,3 +62,7 @@ During buffer insertion, the values in the buffer have lower indices than those 
 Stolen values are placed at the beginning of the array, which doesn't reorder them with respect to an uninserted values but could break ordering with respect to the buffer. Equal values are always adjacent in the buffer, so we just need to be sure Robin Hood doesn't grab a trailing component of a group of equal values. The fix is to walk back to the beginning of the chain (or at least the previous unequal value, but this benchmarks worse) before stealing.
 
 After insertion, filtering is obviously stable, and merging is well known to be stable.
+
+### Further benchmarks
+
+![Performance line plot](images/rand.svg)
