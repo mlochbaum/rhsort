@@ -1,6 +1,6 @@
 # Robin Hood Sort: the algorithm for uniform data
 
-Robin Hood Sort is a stable numeric sorting algorithm that achieves performance several times better than the fastest comparison sorts on uniformly random arrays, with worst-case performance similar to a hybrid merge sort. It's in a similar category to counting sort and radix sort, but can be useful for large ranges where counting sort isn't applicable, and can be better than radix sort for large element sizes or small arrays.
+Robin Hood Sort is a stable numeric sorting algorithm that achieves performance several times better than the fastest comparison sorts on uniformly random arrays, with worst-case performance similar to a hybrid merge sort. It's in a similar category to counting sort and radix sort (and switches to counting sort on small ranges), but can be useful for large ranges where counting sort isn't applicable, and can be better than radix sort for large element sizes or small arrays.
 
     Best     Average        Worst       Memory      Stable      Deterministic
     n        n log log n    n log n     n           Yes         Yes
@@ -13,7 +13,7 @@ Compared below are merge sort [quadsort](https://github.com/scandum/quadsort), t
 
 So Robin Hood is tested against the fastest sorting algorithms I know, on wolfsort's own benchmark suite. On the headline benchmark, well, ska_sort is hard to beat. But against stable algorithms there's no contest! Surprised? Well, Robin Hood is very skilled—don't forget it—but his greatest skill is cheating.
 
-*Don't worry too much about these specific bad cases, unless of course you want to use RH on its own, which you shouldn't. Flux/wolfsort have a special analysis pass to use quadsort for most of these, and "generic order" uses a small range, which can easily be detected and obliterated by counting sort. "ascending tiles" hints at a more significant problem, which is that the range can be split into several small clusters. When hybridized with quicksort, it should mostly be possible to rule these cases out during median selection, and quicksort partitioning naturally splits off clusters, which could then be passed to RH.*
+As you might guess, "ascending tiles" hints at a significant problem: that the range might be separated into clusters instead of uniform. When hybridized with quicksort, it should mostly be possible to rule these cases out during median selection, and quicksort partitioning naturally splits off clusters, which could then be passed to RH.
 
 ### Algorithm
 

@@ -2,6 +2,7 @@
 #include <string.h>
 
 typedef int T;
+typedef unsigned int UT;
 typedef size_t U;
 #define LIKELY(X) __builtin_expect(X,1)
 #define RARE(X) __builtin_expect(X,0)
@@ -29,6 +30,21 @@ static void merge(T *a, U l, U n, T *aux) {
   }
 }
 
+// Counting sort of the n values starting at x
+// This is the basic version: fast for small ranges
+// There are better strategies as the range gets close to n
+static void count(T *x, U n, T min, U range) {
+  U *count = malloc(range*sizeof(U));
+  memset(count, 0, range*sizeof(U));
+  // Count the values
+  for (U i=0; i<n; i++) count[x[i]-min]++;
+  // Write based on the counts
+  for (U i=0; i<range; i++)
+    for (U j=0; j<count[i]; j++)
+      *x++ = min+i;
+  free(count);
+}
+
 // The main attraction. Sort array of ints with length n.
 void rhsort32(T *array, U n) {
   T *x = array, *xb=x;  // Stolen blocks go to xb
@@ -38,10 +54,13 @@ void rhsort32(T *array, U n) {
   for (U i=1; i<n; i++) {
     T e=x[i]; if (e<min) min=e; if (e>max) max=e;
   }
+  U r = (U)(UT)(max-min) + 1;           // Size of range
+  if (RARE(r <= 2*n)) {                 // Counting sort if it's small
+    return count(x, n, min, r);
+  }
 
   // Planning for the buffer
   T s = max+1;                          // Sentinel value
-  U r = (U)(unsigned int)(max-min) + 1; // Size of range
   U sh = 0;                             // Contract to fit range
   while (r>5*n) { sh++; r>>=1; }        // Shrink to stay at O(n) memory
   // Goes down to BLOCK once we know we have to merge
