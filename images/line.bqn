@@ -1,8 +1,7 @@
 #! /usr/bin/env bqn
 
 util ← •Import "util.bqn"
-Enc‿Attr‿At‿Elt‿Num‿Pos‿SVG‿Ge ← util
-Rect‿Text‿TSize‿Path‿Background‿Outline‿Legend‿Tick ← util
+Num‿Pos‿SVG‿Ge‿Text‿TSize‿Path‿Background‿Outline‿Legend‿Tick ← util
 
 input ← •wdpath⊸•file.At¨ •args
 n ← ≠input

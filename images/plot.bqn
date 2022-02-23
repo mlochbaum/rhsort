@@ -1,8 +1,7 @@
 #! /usr/bin/env bqn
 
 util ← •Import "util.bqn"
-Enc‿Attr‿At‿Elt‿Num‿Pos‿SVG‿Ge ← util
-Rdim‿Rect‿Text‿TSize‿Background‿Outline‿Legend‿Tick ← util
+Num‿Pos‿SVG‿Ge‿Rect‿Text‿TSize‿Background‿Outline‿Legend‿Tick ← util
 
 "Input filename required" ! 1≤≠•args
 input ← •wdpath •file.At ⊑•args
@@ -35,12 +34,13 @@ h ← 68 + h1 ← (h0← 56) + ph ← nd×gs
 wh ← w‿h
 
 colors ← "#6ad"‿"#c7d"‿"#b9e"‿"#cc6"‿"#da4"‿"#24851d"
+_cBar ← { "stroke=#111" Ge colors "fill="⊸∾⊸𝔽¨ 𝕩 }
 
 TT ← < TSize⊸∾⟜(Pos(w0+pw÷2)⊸⋈)´⊸Text
 
 gh ← h0+gs×0.5+↕nd
 bh ← gh +⌜ bs × (↕-2÷˜-⟜1)nn
-bars ← bh Rect∘{⟨w0,𝕨-bt÷2⟩≍𝕩‿bt}¨ nd‿nn⥊pw×avg÷max
+bars ← nd‿nn⥊pw×avg÷max
 
 •Out¨ (0‿0∾wh) SVG "text-anchor=middle|font-size=14px|fill=#111" Ge ⟨
   Background 0‿0≍wh
@@ -56,7 +56,7 @@ bars ← bh Rect∘{⟨w0,𝕨-bt÷2⟩≍𝕩‿bt}¨ nd‿nn⥊pw×avg÷max
     ttext ⇐ ⟨Num ticks⟩
   }
   "text-anchor=end" Ge ((w0-5)Pos∘⋈¨gh) Text¨ dists
-  "stroke=#111" Ge colors ("g"Attr"fill"⊸⋈)⊸Enc¨ <˘⍉bars
+  Ge _cBar <˘⍉ bh Rect∘{⟨w0,𝕨-bt÷2⟩≍𝕩‿bt}¨ bars
   Outline w0‿h0≍tw‿ph
   Legend {
     isRH ⇐ 1«nn⥊0
@@ -64,7 +64,6 @@ bars ← bh Rect∘{⟨w0,𝕨-bt÷2⟩≍𝕩‿bt}¨ nd‿nn⥊pw×avg÷max
     width ⇐ 150
     place ⇐ ⟨w0+tw-10+width,h0+300⟩
     pad ⇐ 2 ÷˜ spacing ⇐ 11+bs
-    Bar ← "fill"⊸⋈⊸("rect" Elt ∾⟜Rdim)⟜{10‿(𝕩-bt÷2)≍18‿bt}
-    Samples ⇐ "stroke=#111" Ge colors Bar¨ ⊢
+    Samples ⇐ Rect⟜{10‿(𝕩-bt÷2)≍18‿bt} _cBar
   }
 ⟩
