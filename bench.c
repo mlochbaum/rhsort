@@ -3,6 +3,30 @@
 #include <string.h>
 #include <time.h>
 
+typedef size_t U;
+static U monoclock(void) {
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return 1000000000*ts.tv_sec + ts.tv_nsec;
+}
+
+#if PROFILE
+#define PROFLEN 10
+static U profsums[PROFLEN];
+#define PROF_INIT memset(profsums, 0, sizeof(profsums))
+#define PROF_START(n) U proft##n = monoclock()
+#define PROF_CONT(n)    proft##n = monoclock()
+#define PROF_END(n)   profsums[n] += monoclock()-proft##n
+static void printprof(U denom) {
+  U l=PROFLEN; while (l && profsums[l-1]==0) l--;
+  printf(" profile");
+  for (U i=0; i<l; i++) printf("%7.3f", (double)profsums[i]/denom);
+}
+#else
+#define PROF_INIT (void)0
+#define printprof(n) (void)0
+#endif
+
 #include "rhsort.c"
 
 #if QUADSORT || FLUXSORT || WOLFSORT
@@ -22,12 +46,6 @@
 #include "wolfsort/src/ska_sort.hpp"
 #endif
 
-static U monoclock(void) {
-  struct timespec ts;
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  return 1000000000*ts.tv_sec + ts.tv_nsec;
-}
-
 static void sort32(T *x, U n) {
 #if MERGESORT
   T *aux = malloc(n*sizeof(T));
@@ -44,8 +62,8 @@ static void sort32(T *x, U n) {
 #elif SKASORT
   ska_sort(x, x+n);
 #elif SKACOPY
-  uint32_t *aux = malloc(n*sizeof(T));
-  ska_sort_copy((uint32_t*)x, (uint32_t*)x+n, aux);
+  T *aux = malloc(n*sizeof(T));
+  ska_sort_copy(x, x+n, aux);
   free(aux);
 #elif PDQSORT
   pdqsort(x, x+n);
@@ -102,6 +120,7 @@ int main(int argc, char **argv) {
 #endif
     // Time
     U sum=0, best=0;
+    PROF_INIT;
     for (U r=0; r<iter; r++) {
       memcpy(sort, data+off+r, s);
       U t = monoclock();
@@ -111,6 +130,7 @@ int main(int argc, char **argv) {
       if (r==0||t<best) best=t;
     }
     printf("best:%7.3f avg:%7.3f ns/v", (double)best/n, (double)sum/(iter*n));
+    printprof(iter*n);
     printf("\n");
   }
   return 0;

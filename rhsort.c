@@ -7,6 +7,12 @@ typedef size_t U;
 #define LIKELY(X) __builtin_expect(X,1)
 #define RARE(X) __builtin_expect(X,0)
 
+#ifndef PROF_START
+  #define PROF_START(n) (void)0
+  #define PROF_CONT(n)  (void)0
+  #define PROF_END(n)   (void)0
+#endif
+
 // Minimum size to steal from buffer
 static const U BLOCK = 16;
 
@@ -50,16 +56,19 @@ void rhsort32(T *array, U n) {
   T *x = array, *xb=x;  // Stolen blocks go to xb
 
   // Find the range.
+  PROF_START(0);
   T min=x[0], max=min;
   for (U i=1; i<n; i++) {
     T e=x[i]; if (e<min) min=e; if (e>max) max=e;
   }
   U r = (U)(UT)(max-min) + 1;           // Size of range
+  PROF_END(0);
   if (RARE(r <= 2*n)) {                 // Counting sort if it's small
-    return count(x, n, min, r);
+    PROF_START(5); count(x, n, min, r); PROF_END(5); return;
   }
 
   // Planning for the buffer
+  PROF_START(1);
   T s = max+1;                          // Sentinel value
   U sh = 0;                             // Contract to fit range
   while (r>5*n) { sh++; r>>=1; }        // Shrink to stay at O(n) memory
@@ -70,8 +79,10 @@ void rhsort32(T *array, U n) {
   // Allocate buffer, and fill with sentinels
   T *aux = malloc((sz>n?sz:n)*sizeof(T)); // >=n for merges later
   for (U i=0; i<sz; i++) aux[i] = s;
+  PROF_END(1);
 
   // Main loop: insert array entries into buffer
+  PROF_START(2);
   #define POS(E) ((U)((E)-min) >> sh)
   for (U i=0; i<n; i++) {
     T e = x[i];               // Entry to be inserted
@@ -113,21 +124,28 @@ void rhsort32(T *array, U n) {
     }
   }
   #undef POS
+  PROF_END(2);
 
   // Move all values from the buffer back to the array
   // Use xt += to convince the compiler to make it branchless
+  PROF_START(3);
   while (aux[--sz] == s); sz++;
   T *xt=xb; for (U i=0; i<sz; i++) xt += s!=(*xt=aux[i]);
+  PROF_END(3);
 
   // Merge stolen blocks back in if necessary
   U l = xb-x;  // Size of those blocks
   if (l) {
     // Sort x[0..l]
+    PROF_START(4);
     for (U w=BLOCK; w<l; w*=2)
       for (U i=0, ww=2*w; i<l-w; i+=ww)
         merge(x+i, w, l-i<ww?l-i:ww, aux);
     // And merge with the rest of x
     merge(x, l, n, aux);
+    PROF_END(4);
   }
+  PROF_CONT(1);
   free(aux);  // All done!
+  PROF_END(1);
 }
