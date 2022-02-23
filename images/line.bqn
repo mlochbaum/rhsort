@@ -1,6 +1,8 @@
 #! /usr/bin/env bqn
 
-Enc‿Attr‿At‿Elt‿Num‿Pos‿SVG‿Ge‿Rdim‿Rect‿Text‿Path ← •Import "util.bqn"
+util ← •Import "util.bqn"
+Enc‿Attr‿At‿Elt‿Num‿Pos‿SVG‿Ge ← util
+Rect‿Text‿TSize‿Path‿Background‿Outline‿Legend‿Tick ← util
 
 input ← •wdpath⊸•file.At¨ •args
 n ← ≠input
@@ -27,7 +29,7 @@ off ← 50‿40 ⋄ end ← 20‿46
 padi  ← 0‿20
 
 gr ← "stroke-width=1.2|font-size=14px|text-anchor=middle"
-TT ← < (Text("font-size"⋈Num∘⊑∾"px"˙)∾·Pos(width÷2)⋈1⊑⊢)⊸Enc
+TT ← < TSize⊸∾⟜(Pos(width÷2)⊸⋈)´⊸Text
 
 win ← -˜`¨ bounds ← (⌊´≍⌈´)¨ pts ← <∘∾˘ xy ← ⍉> <˘¨ ⋆⁼dat
 dim ← width (⊣⋈×) 0.55
@@ -35,37 +37,25 @@ out ← (-off)≍dim+off+end
 Scale ← padi+(dim-2×padi)× ({¬𝕏}⌾(1⊸⊑) {𝕩÷˜𝕨-˜⊢}´¨ win) {𝕎𝕩}¨ ⊢
 line ← (/≠¨⊏xy) ⊔ Num ⍉> Scale pts
 
-ls ← 18 ⋄ lp ← 6
-lh ← lp+ls×0.5+↕n
-lw ← 134
-ld ← ⟨lw,(2×lp)+ls×n⟩
-rhs ← (At"font-weight=bold|stroke-width=0.6|stroke=#211")∾"fill"⋈¯1⊑colorlist
-ltr ← "transform=translate("∾")"∾˜∾⟜","⊸∾´Num 10‿6
-legend ← (ltr∾"|text-anchor=start|font-size=13px") Ge ⟨
-  "fill=white|stroke=#111" Rect 0‿0≍ld
-  "stroke-width=2.6" Ge col ≍⊸Path⟜(∾"M h"∾¨Num)¨ (8∾∾⟜22)¨ lh
-  (rhs⊸∾¨⌾(rhf⊸/)36 Pos∘⋈¨lh) ("text"Attr"dy"‿"0.33em"⊸∾)⊸Enc¨ names
-⟩
-
-tpos ← Scale ⋆⁼ ticks ← ⟨10⋆2+↕6, 5∾10×1+↕7⟩
-DT ← {
-  P ← ('h'=𝕨)◶⟨∾⟜(0‿1×dim),¯1⌽∾⟜(1‿0×dim)⟩
-  ("path"Elt"d"⋈·∾("M "∾𝕨)∾¨Num∘P)¨ 𝕩
-}
-
 •Out¨ (⥊out) SVG gr Ge ∾⥊¨ ⟨
-  <"fill=white" Rect out
+  Background out
   ⟨18,¯19⟩ TT "Sorting random 4-byte integers"
   "text"⊸Attr⊸Enc˜´¨ ⟨
     ⟨"Size", "dy"‿"1em"∾Pos 0‿16+dim×0.5‿1⟩
     ⟨"Time (ns / value)", "transform"‿"rotate(-90)"∾"dy"‿"-0.35em"∾Pos 0‿22-˜⌽dim×0‿¯0.5⟩
   ⟩
-  "stroke-width=0.3|stroke=#555" Ge "vh" DT¨ (¯1↓1↓⊢)⌾⊑ tpos
-  "font-size=11px" Ge ⟨
-    tpos ("text"Attr·Pos⋈⟜((1⊑dim)+13))⊸Enc¨⟜(1e3⊸<◶Num‿("1e"∾'0'+·⌊0.5+10⋆⁼⊢)¨)○⊑ ticks
-    "text-anchor=end" Ge tpos (Text·Pos ¯6⊸⋈)⊸Enc¨⟜Num○(1⊸⊑) ticks
-  ⟩
+  Tick {
+    off⇐0‿0 ⋄ dim⇐dim
+    orient⇐"vh"
+    tpos ⇐ Scale ⋆⁼ ticks ← ⟨10⋆2+↕6, 5∾10×1+↕7⟩
+    ttext ⇐ ⟨1e3⊸<◶Num‿("1e"∾'0'+·⌊0.5+10⋆⁼⊢)¨, Num⟩ {𝕎𝕩}¨ ticks
+  }
   "stroke-width=2.6|fill=none" Ge col ≍⊸Path⟜('M'⌾⊑∘∾·⥊ "L "∾¨⎉1⊢)¨ line
-  <"stroke=#111|fill=none" Rect 0‿0≍dim
-  legend
+  Outline 0‿0≍dim
+  Legend {
+    label ⇐ names ⋄ isRH ⇐ rhf
+    place ⇐ 10‿6
+    width ⇐ 134 ⋄ spacing ⇐ 18 ⋄ pad ⇐ 6
+    Samples ⇐ "stroke-width=2.6" Ge col ≍⊸Path⟜(∾"M h"∾¨Num)¨ (8∾∾⟜22)¨
+  }
 ⟩
