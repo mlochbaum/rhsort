@@ -37,12 +37,12 @@ out ← (-off)≍dim+off+end
 Scale ← padi+(dim-2×padi)× ({¬𝕏}⌾(1⊸⊑) {𝕩÷˜𝕨-˜⊢}´¨ win) {𝕎𝕩}¨ ⊢
 line ← (/≠¨⊏xy) ⊔ Num ⍉> Scale pts
 
-•Out¨ (⥊out) SVG gr Ge ∾⥊¨ ⟨
+•Out¨ (⥊out) SVG gr Ge ⟨
   Background out
   ⟨18,¯19⟩ TT "Sorting random 4-byte integers"
-  "text"⊸Attr⊸Enc˜´¨ ⟨
-    ⟨"Size", "dy"‿"1em"∾Pos 0‿16+dim×0.5‿1⟩
-    ⟨"Time (ns / value)", "transform"‿"rotate(-90)"∾"dy"‿"-0.35em"∾Pos 0‿22-˜⌽dim×0‿¯0.5⟩
+  ⟨
+    "Size" Text˜ Pos 0‿26+dim×0.5‿1
+    "Time (ns / value)" Text˜ "transform"‿"rotate(-90)"∾Pos 0‿32-˜⌽dim×0‿¯0.5
   ⟩
   Tick {
     off⇐0‿0 ⋄ dim⇐dim

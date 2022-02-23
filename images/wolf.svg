@@ -16,15 +16,15 @@
       <path d='M491.309 56v486'/>
     </g>
     <g font-size='11px'>
-      <text x='100' y='555'>0</text>
-      <text x='148.913' y='555'>10</text>
-      <text x='197.827' y='555'>20</text>
-      <text x='246.741' y='555'>30</text>
-      <text x='295.654' y='555'>40</text>
-      <text x='344.568' y='555'>50</text>
-      <text x='393.482' y='555'>60</text>
-      <text x='442.396' y='555'>70</text>
-      <text x='491.309' y='555'>80</text>
+      <text dy='0.33em' x='100' y='551.5'>0</text>
+      <text dy='0.33em' x='148.913' y='551.5'>10</text>
+      <text dy='0.33em' x='197.827' y='551.5'>20</text>
+      <text dy='0.33em' x='246.741' y='551.5'>30</text>
+      <text dy='0.33em' x='295.654' y='551.5'>40</text>
+      <text dy='0.33em' x='344.568' y='551.5'>50</text>
+      <text dy='0.33em' x='393.482' y='551.5'>60</text>
+      <text dy='0.33em' x='442.396' y='551.5'>70</text>
+      <text dy='0.33em' x='491.309' y='551.5'>80</text>
     </g>
     <g text-anchor='end'>
       <text dy='0.33em' x='95' y='83'>Random</text>

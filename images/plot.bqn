@@ -42,7 +42,7 @@ gh ← h0+gs×0.5+↕nd
 bh ← gh +⌜ bs × (↕-2÷˜-⟜1)nn
 bars ← bh Rect∘{⟨w0,𝕨-bt÷2⟩≍𝕩‿bt}¨ nd‿nn⥊pw×avg÷max
 
-•Out¨ (0‿0∾wh) SVG "text-anchor=middle|font-size=14px|fill=#111" Ge ∾⥊¨ ⟨
+•Out¨ (0‿0∾wh) SVG "text-anchor=middle|font-size=14px|fill=#111" Ge ⟨
   Background 0‿0≍wh
   ⟨20,h0-37⟩ TT "The Big Bad Wolfsort benchmark"
   ⟨15,h0-14⟩ TT "Sort 100,000 4-byte integers, average of 100"

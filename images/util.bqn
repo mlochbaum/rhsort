@@ -47,18 +47,16 @@ Legend ⇐ {
 Tick ⇐ {
   off‿dim‿orient‿tpos‿ttext ← 𝕩
   s ← 'h'=orient
-  DT ← {
+  Lines ← {
     h ← 'h'=𝕨
     P ← ⌽⌾(2⊸↑)⍟h ∾⟜((¬h)⊏⍉off≍dim)
     ("path"Elt"d"⋈·∾("M "∾𝕨)∾¨Num∘P)¨ 𝕩
   }
   Filter ← ⊢ /¨˜ 1≤(s⊏dim)(-⌊⊢)-⟜(s⊏off)
-  TT ← {
-    0𝕊p‿t: p ("text"Attr·Pos⋈⟜((1⊑off+dim)+13))⊸Enc¨ t ;
-    1𝕊p‿t: "text-anchor=end" Ge p (Pos ¯6⊸⋈)⊸Text¨ t
-  }
+  to ← 9.5‿¯6 + ⌽off+dim×0‿1
+  Vals ← { "text-anchor=end" Ge⍟𝕨 (Pos 𝕨⌽⋈⟜(𝕨⊑to))⊸Text¨´ 𝕩 }
   ⟨
-    "stroke-width=0.3|stroke=#555" Ge orient DT¨ Filter tpos
-    "font-size=11px" Ge s TT¨ tpos ⋈¨ ttext
+    "stroke-width=0.3|stroke=#555" Ge orient Lines¨ Filter tpos
+    "font-size=11px" Ge s Vals¨ tpos ⋈¨ ttext
   ⟩
 }
