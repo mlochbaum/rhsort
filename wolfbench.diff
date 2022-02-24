@@ -1,54 +1,57 @@
 diff --git a/src/bench.c b/src/bench.c
-index 9cf9ef4..e123916 100644
+index 5117b7e..00cd188 100644
 --- a/src/bench.c
 +++ b/src/bench.c
-@@ -57,8 +57,10 @@
- #include "gridsort.h"
- #include "blitsort.h"
+@@ -52,9 +52,11 @@
  
+ #ifdef __GNUG__
+ #include <algorithm>
 -//#include "pdqsort.h" // https://github.com/orlp/pdqsort/blob/master/pdqsort.h
 +#include "pdqsort.h" // https://github.com/orlp/pdqsort/blob/master/pdqsort.h
-+#include "ska_sort.hpp"
  //#include "timsort.h" // https://github.com/timsort/cpp-TimSort
+ #endif
++#include "ska_sort.hpp"
 +#include "../../rhsort.c"
  
- #define STDSORT_H
+ //typedef int CMPFUNC (const void *a, const void *b);
  
-@@ -230,6 +232,10 @@ void test_sort(void *array, void *unsorted, void *valid, int minimum, int maximu
+@@ -213,6 +215,10 @@ void test_sort(void *array, void *unsorted, void *valid, int minimum, int maximu
  
- 			switch (*name)
+ 			switch (name32)
  			{
-+				case 'r':
++				case 'r' + 'h' * 32 + 's' * 1024:
 +					rhsort32(array, max);
 +					break;
 +
- 				case 'b':
- 					blitsort(array, max, size, cmpf);
+ 				case 'c' + 'r' * 32 + 'u' * 1024:
+ 					crumsort(array, max, size, cmpf);
  					break;
-@@ -247,6 +253,13 @@ void test_sort(void *array, void *unsorted, void *valid, int minimum, int maximu
+@@ -250,6 +256,14 @@ void test_sort(void *array, void *unsorted, void *valid, int minimum, int maximu
+ 				case 's' + 't' * 32 + 'a' * 1024:
+ 					if (size == sizeof(int)) std::stable_sort(pta, pta + max); else if (size == sizeof(long long)) std::stable_sort(ptla, ptla + max); else std::stable_sort(ptda, ptda + max);
  					break;
- 
- 				case 's':
-+					if (name[1]=='k')
++
++				case 's' + 'k' * 32 + 'a' * 1024:
 +					{
 +						int *aux = malloc(max*sizeof(T));
 +						ska_sort_copy(pta, pta+max, aux);
 +						free(aux);
 +					}
-+					else
- #ifdef STDSORT_H
- 
- 					if (size == sizeof(int))
-@@ -593,7 +606,7 @@ int main(int argc, char **argv)
++					break;
+ #endif
+ #ifdef GFX_TIMSORT_HPP
+ 				case 't' + 'i' * 32 + 'm' * 1024:
+@@ -562,7 +576,8 @@ int main(int argc, char **argv)
+ 	long long *la_array, *lr_array, *lv_array;
  	long double *da_array, *dr_array, *dv_array;
  
- 	char dist[100];
--	char *sorts[] = { "+", "stablesort", "blitsort", "quadsort", "gridsort", "fluxsort", "wolfsort" };
-+	char *sorts[] = { "+", "quadsort", "pdqsort", "fluxsort", "wolfsort", "ska_sort", "rhsort" };
- //	char *sorts[] = { "+", "timsort", "stablesort", "quadsort", "gridsort", "fluxsort", "wolfsort" };
+-	char dist[40], *sorts[] = { "*", "crumsort", "fluxsort", "gridsort", "quadsort", "wolfsort" };
++	char dist[40], *sorts[] = { "*", "quadsort", "pdqsort", "fluxsort", "wolfsort", "ska_sort", "rhsort" };
++//	char dist[40], *sorts[] = { "*", "crumsort", "fluxsort", "gridsort", "quadsort", "wolfsort" };
  
  	if (argc >= 1 && argv[1] && *argv[1])
-@@ -664,6 +677,7 @@ int main(int argc, char **argv)
+ 	{
+@@ -636,6 +651,7 @@ int main(int argc, char **argv)
  	}
  #endif
  
@@ -56,7 +59,7 @@ index 9cf9ef4..e123916 100644
  	// 128 bit
  
  	da_array = (long double *) malloc(max * sizeof(long double));
-@@ -734,6 +748,7 @@ int main(int argc, char **argv)
+@@ -704,6 +720,7 @@ int main(int argc, char **argv)
  	free(la_array);
  	free(lr_array);
  	free(lv_array);

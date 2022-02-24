@@ -8,7 +8,7 @@ input ← •wdpath •file.At ⊑•args
 
 # Parse the file
 Parse ← {
-  h‿d ← (⊑⋈2⊸↓) •file.Lines 𝕩
+  h‿d ← (⊑⋈2⊸↓) ('|'=(⊑1⊸↑)¨)⊸/ •file.Lines 𝕩
   c ← +`'|'=h
   m ← ¬∧˝"| "∊˜>d
   g ← 1-˜m×c ⊏ +˝(1+↕∘≠)⊸× "Name"‿"Distribution"‿"Average" ∨´∘⍷⌜ c ⊔ h
@@ -18,8 +18,11 @@ name‿dist‿avg ← Parse input
 ! (≠∘⊑⥊¨·⊣⌜˜`⌾⌽⍷¨)⊸≡ ⊐¨dist‿name
 PD ← {
   t←-≠o←" order" ⋄ 𝕩↓˜↩t×o≡t↑𝕩
-  m←⊢´⊸<(0¨e)(≠`»≠⊢)b←𝕩(≠∘⊢↑⍷)˜e←"ending"
-  (-´"Aa")⊸+⌾⊑ (b≥m)/𝕩+(b∧m)×'.'-𝕩
+  Abbr ← {
+    m←⊢´⊸<(0¨e)(≠`»≠⊢)b←𝕩(≠∘⊢↑⍷)˜e←𝕨
+    (b≥m)/𝕩+(b∧m)×'.'-𝕩
+  }
+  (-´"Aa")⊸+⌾⊑ "ending" Abbr "om" Abbr⍟(⊑'%'∊⊢) 𝕩
 }
 names ← ⍷name
 dists ← PD¨⍷dist
@@ -62,7 +65,7 @@ bars ← nd‿nn⥊pw×avg÷max
     isRH ⇐ 1«nn⥊0
     label ⇐ ∾⟜"_copy"⍟("ska_sort"⊸≡)¨ "Robin Hood"¨⌾(isRH⊸/) names
     width ⇐ 150
-    place ⇐ ⟨w0+tw-10+width,h0+300⟩
+    place ⇐ ⟨w0+tw-10+width,h0+250⟩
     pad ⇐ 2 ÷˜ spacing ⇐ 11+bs
     Samples ⇐ Rect⟜{10‿(𝕩-bt÷2)≍18‿bt} _cBar
   }
