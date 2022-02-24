@@ -77,7 +77,7 @@ int cmpi(const void * a, const void * b) {
 	return *(T*)a - *(T*)b;
 }
 
-static U n_iter(U n) { return 1+2000000/n; }
+static U n_iter(U n) { return 1+3000000/(20+n); }
 
 int main(int argc, char **argv) {
   // Command-line arguments are max or min,max
@@ -86,8 +86,9 @@ int main(int argc, char **argv) {
   if (argc>1) {
     ls = argv[1][0]=='l';
     if (ls) {
-      // Log line chart 100 to 1e7 with 35 points, plus 4 before for warmup
-      min=0; max=39;
+      // Log line chart 100 to 1e7 with 44 points, plus 4 before for warmup
+      min=0;
+      max = (argc>2) ? atoi(argv[2]) : 48;
     } else {
       max=atoi(argv[argc-1]);
       if (argc>2) min=atoi(argv[argc-2]);
@@ -95,10 +96,12 @@ int main(int argc, char **argv) {
   }
 
   U sizes[max+1];
-  if (!ls) { for (U k=0,n=1 ; k<=max; k++,n*=10  ) sizes[k]=n; }
-  else     { for (U k=0,n=28; k<=max; k++,n*=1.39) sizes[k]=n; sizes[max]=10000000; }
+  if (!ls) { for (U k=0,n=1 ; k<=max; k++,n*=10) sizes[k]=n; }
+  else     { for (U k=0,n=34; k<=max; k++,n=n*1.3+(n<70)) sizes[k]=n; if(max==48)sizes[max]=10000000; }
 
-  U s=sizes[max]; s+=n_iter(s)-1; s*=sizeof(T);
+  U s=sizes[max]; s+=n_iter(s)-1;
+  U q=sizes[min]; q+=n_iter(q)-1; if (s<q) s=q;
+  s*=sizeof(T);
   T *data = malloc(s), // Saved random data
     *sort = malloc(s), // Array to be sorted
     *chk  = malloc(s); // For checking with qsort

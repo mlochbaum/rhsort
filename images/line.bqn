@@ -46,7 +46,7 @@ line ← (/≠¨⊏xy) ⊔ Num ⍉> Scale pts
   Tick {
     off⇐0‿0 ⋄ dim⇐dim
     orient⇐"vh"
-    tpos ⇐ Scale ⋆⁼ ticks ← ⟨10⋆2+↕6, 5∾10×1+↕7⟩
+    tpos ⇐ Scale ⋆⁼ ticks ← ⟨10⋆2+↕6, 5∾10×1+↕8⟩
     ttext ⇐ ⟨1e3⊸<◶Num‿("1e"∾'0'+·⌊0.5+10⋆⁼⊢)¨, Num⟩ {𝕎𝕩}¨ ticks
   }
   "stroke-width=2.6|fill=none" Ge col ≍⊸Path⟜('M'⌾⊑∘∾·⥊ "L "∾¨⎉1⊢)¨ line
