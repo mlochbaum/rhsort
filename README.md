@@ -92,3 +92,19 @@ images/line.bqn res/r_{flux,wolf,ska_,rh}.txt > images/rand.svg
 ```
 
 </details>
+
+![Performance breakdown](images/parts.svg)
+<details><summary><b>details</b></summary>
+
+```sh
+# Do benchmark
+gcc -O3 -D PROFILE -D NOTEST bench.c && ./a.out l > res/rp_rh.txt
+# For comparison
+gcc -O3 -D FLUXSORT -D NOTEST bench.c && ./a.out l > res/r_flux.txt
+# Make image
+images/line.bqn res/r{_flux,p_rh}.txt > images/parts.svg
+```
+
+</details>
+
+Time taken in each section: from bottom to top, range-finding, buffer initialization, insertion, and filtering.

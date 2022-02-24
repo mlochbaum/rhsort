@@ -8,14 +8,17 @@ n ← ≠input
 
 Read ← {
   ToNats ← ((>⟜«0⊸≤) / 0(0⊸≤××⟜10⊸+)`⊢) · 10⊸≤⊸(¬⊸×-⊣) -⟜'0'
-  tab ← ∘‿3 ⥊ ToNats '.'⊸≠⊸/ •file.Chars 𝕩
-  0‿2⊸⊏˘ ÷⟜1e3⌾(1↓⍉) 4 ↓ tab
+  pr ← "profile" ∨´∘⍷⊑ l ← •file.Lines 𝕩
+  c ← { pr ? 1+´'.'=⊑l ; 3 }
+  tab ← ∘‿c ⥊ ToNats '.'⊸≠⊸/ ∾l
+  pr◶⟨0‿2⊸⊏, ⊏∾·+`3⊸↓⟩ ⍉ ÷⟜1e3⌾(1↓⍉) 4 ↓ tab
 }
 
 fname ← ((»∨`)∘=⟜'_'⊸/ ·∧`∘≠⟜'.'⊸/ •file.Name)¨ •args
 
-dat ← ⍉∘Read¨ input
-! 1=+´∊⊏¨dat
+dat ← Read¨ input
+x ← ⊏⊑dat
+! ∧´(x≡⊏)¨1↓dat
 
 namelist  ← "quad"‿"pdq" ‿"flux"‿"wolf"‿"ska_"‿"rh"
 colorlist ← "#6ad"‿"#c7d"‿"#b9e"‿"#cc6"‿"#da4"‿"#24851d"
@@ -25,16 +28,19 @@ names ← rhf ⊣◶⟨⊢∾"sort"∾"_copy"/˜"ska_"⊸≡,"Robin Hood"⟩¨ f
 
 width ← 512
 off ← 50‿40 ⋄ end ← 20‿46
-padi  ← 0‿20
 
 gr ← "stroke-width=1.2|font-size=14px|text-anchor=middle"
 TT ← < TSize⊸∾⟜(Pos(width÷2)⊸⋈)´⊸Text
 
-win ← -˜`¨ bounds ← (⌊´≍⌈´)¨ pts ← <∘∾˘ xy ← ⍉> <˘¨ ⋆⁼dat
+logy←∧´1=yn←1-˜≠¨dat  # Don't use log-scale y to show parts
+Log ← ⋆⁼⌾(logy⊑⊑‿⊢)
+win ← -˜`¨ bounds ← 0⌾(⊑1⊑⊢)⍟(¬logy) (⌊´≍⌈´)∘⥊¨ Log xy ← ⟨x, ∾1↓¨dat⟩
 dim ← width (⊣⋈×) 0.55
 out ← (-off)≍dim+off+end
-Scale ← padi+(dim-2×padi)× ({¬𝕏}⌾(1⊸⊑) {𝕩÷˜𝕨-˜⊢}´¨ win) {𝕎𝕩}¨ ⊢
-line ← (/≠¨⊏xy) ⊔ Num ⍉> Scale pts
+padb ← logy × padi  ← 0‿20
+Scale ← padi+(dim-padb+padi)× ({¬𝕏}⌾(1⊸⊑) {𝕩÷˜𝕨-˜⊢}´¨ win) {𝕎𝕩}¨ Log
+line ← (<≍˘)⎉1○Num´ Scale xy
+lstyle ← (((↓≍"stroke-width"‿"1.4")⊏˜∊⌾⌽) ∾¨ ⊏⟜col) /yn
 
 •Out¨ (⥊out) SVG gr Ge ⟨
   Background out
@@ -46,10 +52,16 @@ line ← (/≠¨⊏xy) ⊔ Num ⍉> Scale pts
   Tick {
     off⇐0‿0 ⋄ dim⇐dim
     orient⇐"vh"
-    tpos ⇐ Scale ⋆⁼ ticks ← ⟨10⋆2+↕6, 5∾10×1+↕8⟩
+    tpos ⇐ Scale ticks ← ⟨10⋆2+↕6, {logy?5∾10×1+↕8;5×1+↕20}⟩
     ttext ⇐ ⟨1e3⊸<◶Num‿("1e"∾'0'+·⌊0.5+10⋆⁼⊢)¨, Num⟩ {𝕎𝕩}¨ ticks
   }
-  "stroke-width=2.6|fill=none" Ge col ≍⊸Path⟜('M'⌾⊑∘∾·⥊ "L "∾¨⎉1⊢)¨ line
+  { logy?⟨⟩;
+    Area ← ∾∘⥊ ("M "∾"HV"»"L "⎉1) ∾¨ (Num dim-padb)⊸∾
+    st ← "opacity"‿"0.2"⊸≍¨(yn-1)/"fill"⊸⋈¨colors
+    "stroke=none" Ge st Path⟜Area¨ (¬∊/yn)/line
+  }∾⟨
+    "stroke-width=2.6|fill=none" Ge lstyle Path⟜('M'⌾⊑∘∾·⥊ "L "∾¨⎉1⊢)¨ line
+  ⟩
   Outline 0‿0≍dim
   Legend {
     label ⇐ names ⋄ isRH ⇐ rhf

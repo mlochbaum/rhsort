@@ -52,11 +52,12 @@ Tick ⇐ {
     P ← ⌽⌾(2⊸↑)⍟h ∾⟜((¬h)⊏⍉off≍dim)
     ("path"Elt"d"⋈·∾("M "∾𝕨)∾¨Num∘P)¨ 𝕩
   }
-  Filter ← ⊢ /¨˜ 1≤(s⊏dim)(-⌊⊢)-⟜(s⊏off)
+  dist ← (s⊏dim)(-⌊⊢)tpos-s⊏off
+  Filter ← ≤⟜dist/¨⊢
   to ← 9.5‿¯6 + ⌽off+dim×0‿1
   Vals ← { "text-anchor=end" Ge⍟𝕨 (Pos 𝕨⌽⋈⟜(𝕨⊑to))⊸Text¨´ 𝕩 }
   ⟨
-    "stroke-width=0.3|stroke=#555" Ge orient Lines¨ Filter tpos
-    "font-size=11px" Ge s Vals¨ tpos ⋈¨ ttext
+    "stroke-width=0.3|stroke=#555" Ge orient Lines¨ 1 Filter tpos
+    "font-size=11px" Ge s Vals¨ tpos ⋈¨○(0⊸Filter) ttext
   ⟩
 }
