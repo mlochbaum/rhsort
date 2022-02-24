@@ -49,7 +49,7 @@ bars ← nd‿nn⥊pw×avg÷max
   ⟨15,h1+31⟩ TT "Nanoseconds per element"
   ⟨11,h1+51⟩ TT "i5-6200U CPU @ 2.30GHz; compiled with g++ -O3"
   Tick {
-    off⇐w0‿h0 ⋄ dim⇐pw‿ph
+    off⇐w0‿h0 ⋄ dim⇐tw‿ph
     orient⇐"v"
     ticks ← (↕1+⌊)⌾(÷⟜10) maxns ← 1e4×max
     tpos ⇐ ⟨w0+pw×ticks÷maxns⟩

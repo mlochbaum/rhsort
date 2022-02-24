@@ -130,7 +130,15 @@ void rhsort32(T *array, U n) {
   // Use xt += to convince the compiler to make it branchless
   PROF_START(3);
   while (aux[--sz] == s); sz++;
-  T *xt=xb; for (U i=0; i<sz; i++) xt += s!=(*xt=aux[i]);
+  T *xt=xb;
+  {
+    static const U u=8;  // Unrolling size
+    #define WR(I) xt += s!=(*xt=aux[i+I])
+    U i=0;
+    for (; i<(sz&~(u-1)); i+=u) { WR(0); WR(1); WR(2); WR(3); WR(4); WR(5); WR(6); WR(7); }
+    for (; i<sz; i++) WR(0);
+    #undef WR
+  }
   PROF_END(3);
 
   // Merge stolen blocks back in if necessary
