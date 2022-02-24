@@ -7,9 +7,21 @@ Robin Hood Sort is a stable numeric sorting algorithm that achieves performance 
 
 The version given here is not well-tested, is only written for 4-byte integers, and will definitely fail on arrays containing both the minimum and maximum possible integer. Please don't use it directly. The main purpose of this repository is to show the radix sort people that a great benchmark on random data doesn't mean much. The main purpose of Robin Hood sort is to be used as a possible base case in quicksort algorithms like fluxsort and pdqsort, in order to take advantage of ranges where a uniform distribution seems likely and beat those radix sorts once and for all.
 
-Compared below are merge sort [quadsort](https://github.com/scandum/quadsort), top-of-the-line hybrid quicksorts [pdqsort](https://github.com/orlp/pdqsort) and [fluxsort](https://github.com/scandum/fluxsort), and radix sorts [wolfsort](https://github.com/scandum/wolfsort) (also a bit of a hybrid) and [ska_sort_copy](https://probablydance.com/2016/12/02/investigating-radix-sort/) (note that most benchmarks are based on the slower in-place [ska_sort](https://probablydance.com/2017/01/17/faster-sorting-algorithm-part-2/)). If you're wondering, Timsort is no good with integer arrays like this, and single-core IPS⁴o loses to the quicksorts on random data. Run on your machine with `$ ./wolfbench.sh` to download the sorts and build, then `$ ./runwolfbench` to perform the benchmark.
+Compared below are merge sort [quadsort](https://github.com/scandum/quadsort), top-of-the-line hybrid quicksorts [pdqsort](https://github.com/orlp/pdqsort) and [fluxsort](https://github.com/scandum/fluxsort), and radix sorts [wolfsort](https://github.com/scandum/wolfsort) (also a bit of a hybrid) and [ska_sort_copy](https://probablydance.com/2016/12/02/investigating-radix-sort/) (note that most benchmarks are based on the slower in-place [ska_sort](https://probablydance.com/2017/01/17/faster-sorting-algorithm-part-2/)). If you're wondering, Timsort is no good with integer arrays like this, and single-core IPS⁴o loses to the quicksorts on random data.
 
 ![Performance bar chart](images/wolf.svg)
+<details><summary><b>details</b></summary>
+
+```sh
+# To download other sorts and build
+./wolfbench.sh
+# Perform the benchmark; save results
+./runwolfbench > res/wolf.txt
+# Make chart (requires BQN)
+images/bar.bqn res/wolf.txt > images/wolf.svg
+```
+
+</details>
 
 So Robin Hood is tested against the fastest sorting algorithms I know, on wolfsort's own benchmark suite. On the headline benchmark, well, ska_sort is hard to beat. But against stable algorithms there's no contest! Surprised? Well, Robin Hood is very skilled—don't forget it—but his greatest skill is cheating.
 
@@ -66,3 +78,17 @@ After insertion, filtering is obviously stable, and merging is well known to be 
 ### Further benchmarks
 
 ![Performance line plot](images/rand.svg)
+<details><summary><b>details</b></summary>
+
+```sh
+# Perform the benchmarks; save results
+gcc -O3             -D NOTEST bench.c && ./a.out l > res/r_rh.txt
+gcc -O3 -D FLUXSORT -D NOTEST bench.c && ./a.out l > res/r_flux.txt
+gcc -O3 -D WOLFSORT -D NOTEST bench.c && ./a.out l > res/r_wolf.txt
+g++ -w -fpermissive -O3 -D SKACOPY -D NOTEST bench.c && ./a.out l > res/r_ska_.txt
+
+# Make chart (requires BQN)
+images/line.bqn res/r_{flux,wolf,ska_,rh}.txt > images/rand.svg
+```
+
+</details>
