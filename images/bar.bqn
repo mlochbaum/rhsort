@@ -24,7 +24,7 @@ PD ← {
   }
   (-´"Aa")⊸+⌾⊑ "ending" Abbr "om" Abbr⍟(⊑'%'∊⊢) 𝕩
 }
-names ← ⍷name
+names‿colors‿isRH ← util.ProcName ¯4 ↓¨ ⍷name
 dists ← PD¨⍷dist
 
 # Create the plot
@@ -36,7 +36,6 @@ w ← 14 +      (w0←100) + tw ← 6 + pw←400-6
 h ← 68 + h1 ← (h0← 56) + ph ← nd×gs
 wh ← w‿h
 
-colors ← "#6ad"‿"#c7d"‿"#b9e"‿"#cc6"‿"#da4"‿"#24851d"
 _cBar ← { "stroke=#111" Ge colors "fill="⊸∾⊸𝔽¨ 𝕩 }
 
 TT ← < TSize⊸∾⟜(Pos(w0+pw÷2)⊸⋈)´⊸Text
@@ -62,8 +61,7 @@ bars ← nd‿nn⥊pw×avg÷max
   Ge _cBar <˘⍉ bh Rect∘{⟨w0,𝕨-bt÷2⟩≍𝕩‿bt}¨ bars
   Outline w0‿h0≍tw‿ph
   Legend {
-    isRH ⇐ 1«nn⥊0
-    label ⇐ ∾⟜"_copy"⍟("ska_sort"⊸≡)¨ "Robin Hood"¨⌾(isRH⊸/) names
+    isRH ⇐ isRH ⋄ label ⇐ names
     width ⇐ 150
     place ⇐ ⟨w0+tw-10+width,h0+250⟩
     pad ⇐ 2 ÷˜ spacing ⇐ 11+bs

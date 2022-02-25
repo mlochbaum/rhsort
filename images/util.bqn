@@ -21,6 +21,7 @@ SVG ⇐ {
   ("svg" Attr a) Enc 𝕩
 }
 
+# Specific elements
 Ge ⇐ "g"⊸At⊸Enc
 Rdim ⇐ Pos∘⊏∾"width"‿"height"≍˘·Num⊢˝
 Rect ⇐ "rect" Elt Rdim⊘(At⊸∾⟜Rdim)
@@ -28,6 +29,7 @@ Path ⇐ "path" Elt "d"⊸⋈⊘(⊣∾"d"⋈⊢)
 Text ⇐ ("text"Attr"dy"‿"0.33em"⊸∾)⊸Enc
 TSize ⇐ "font-size"⋈Num∾"px"˙
 
+# Graph components
 Background ⇐ <"fill=white" Rect ⊢
 Outline ⇐ <"stroke=#111|fill=none" Rect ⊢
 
@@ -60,4 +62,13 @@ Tick ⇐ {
     "stroke-width=0.3|stroke=#555" Ge orient Lines¨ 1 Filter tpos
     "font-size=11px" Ge s Vals¨ tpos ⋈¨○(0⊸Filter) ttext
   ⟩
+}
+
+# Name info
+ProcName ⇐ {
+  nam ← "rh"     ‿"quad"‿"pdq" ‿"flux"‿"wolf"‿"ska_"‿"merge"
+  col ← "#24851d"‿"#6ad"‿"#c7d"‿"#b9e"‿"#cc6"‿"#da4"‿"#69a" ‿"black"
+  isRH ← 0 = ni ← nam ⊐ 𝕩
+  names ← isRH ⊣◶⟨⊢∾"sort"∾"_copy"/˜"ska_"⊸≡,"Robin Hood"⟩¨ 𝕩
+  ⟨names, ni⊏col, isRH⟩
 }

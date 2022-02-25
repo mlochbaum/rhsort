@@ -14,17 +14,13 @@ Read ← {
   pr◶⟨0‿2⊸⊏, ⊏∾·+`3⊸↓⟩ ⍉ ÷⟜1e3⌾(1↓⍉) 4 ↓ tab
 }
 
-fname ← ((»∨`)∘=⟜'_'⊸/ ·∧`∘≠⟜'.'⊸/ •file.Name)¨ •args
-
 dat ← Read¨ input
 x ← ⊏⊑dat
 ! ∧´(x≡⊏)¨1↓dat
 
-namelist  ← "quad"‿"pdq" ‿"flux"‿"wolf"‿"ska_"‿"rh"
-colorlist ← "#6ad"‿"#c7d"‿"#b9e"‿"#cc6"‿"#da4"‿"#24851d"
-rhf ← (1-˜≠namelist) = ni ← namelist ⊐fname
-col ← "stroke"⊸⋈¨ colors ← ni⊏colorlist∾<"black"
-names ← rhf ⊣◶⟨⊢∾"sort"∾"_copy"/˜"ska_"⊸≡,"Robin Hood"⟩¨ fname
+fname ← ((»∨`)∘=⟜'_'⊸/ ·∧`∘≠⟜'.'⊸/ •file.Name)¨ •args
+names‿colors‿rhf ← util.ProcName fname
+col ← "stroke"⊸⋈¨ colors
 
 width ← 512
 off ← 50‿40 ⋄ end ← 20‿46
