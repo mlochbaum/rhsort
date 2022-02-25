@@ -37,17 +37,27 @@ static void merge(T *a, U l, U n, T *aux) {
 }
 
 // Counting sort of the n values starting at x
-// This is the basic version: fast for small ranges
-// There are better strategies as the range gets close to n
 static void count(T *x, U n, T min, U range) {
-  U *count = malloc(range*sizeof(U));
-  memset(count, 0, range*sizeof(U));
-  // Count the values
-  for (U i=0; i<n; i++) count[x[i]-min]++;
-  // Write based on the counts
-  for (U i=0; i<range; i++)
-    for (U j=0; j<count[i]; j++)
-      *x++ = min+i;
+  U *count = calloc(range,sizeof(U));
+  if (range < n/8) { // Short range: branching on count is cheap
+    // Count the values
+    for (U i=0; i<n; i++) count[x[i]-min]++;
+    // Write based on the counts
+    for (U i=0; i<range; i++)
+      for (U j=0; j<count[i]; j++)
+        *x++ = min+i;
+  } else {
+    // Count, and zero the array
+    for (U i=0; i<n; i++) { count[x[i]-min]++; x[i]=0; }
+    // Write differences to x
+    x[0] = min;
+    for (U i=0, s=0; i<range-1; i++) { s+=count[i]; x[s]++; }
+    // Prefix sum
+    { U i=0;
+      for (; i<n-4; i+=4) { x[i+4] += x[i+3] += x[i+2] += x[i+1] += x[i]; }
+      for (; i<n-1; i++) { x[i+1] += x[i]; }
+    }
+  }
   free(count);
 }
 
@@ -63,7 +73,7 @@ void rhsort32(T *array, U n) {
   }
   U r = (U)(UT)(max-min) + 1;           // Size of range
   PROF_END(0);
-  if (RARE(r <= 2*n)) {                 // Counting sort if it's small
+  if (RARE(r/4 < n)) {                  // Counting sort if it's small
     PROF_START(5); count(x, n, min, r); PROF_END(5); return;
   }
 
