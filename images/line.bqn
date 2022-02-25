@@ -3,8 +3,15 @@
 util ← •Import "util.bqn"
 Num‿Pos‿SVG‿Ge‿Text‿TSize‿Path‿Background‿Outline‿Legend‿Tick ← util
 
-input ← •wdpath⊸•file.At¨ •args
+files‿opts ← 2 ↑ ('-'=⊑¨)⊸⊔ •args
+fname ← (∧`∘≠⟜'.'⊸/ •file.Name)¨ files
+input ← •wdpath⊸•file.At¨ files
 n ← ≠input
+
+title ← (⊑'s'∊⊑¨fname) ⊑ ⟨
+  "Sorting random 4-byte integers"
+  "Sorting small-range plus outlier"
+⟩
 
 Read ← {
   ToNats ← ((>⟜«0⊸≤) / 0(0⊸≤××⟜10⊸+)`⊢) · 10⊸≤⊸(¬⊸×-⊣) -⟜'0'
@@ -18,8 +25,7 @@ dat ← Read¨ input
 x ← ⊏⊑dat
 ! ∧´(x≡⊏)¨1↓dat
 
-fname ← ((»∨`)∘=⟜'_'⊸/ ·∧`∘≠⟜'.'⊸/ •file.Name)¨ •args
-names‿colors‿rhf ← util.ProcName fname
+names‿colors‿rhf ← util.ProcName (»∨`)∘=⟜'_'⊸/¨ fname
 col ← "stroke"⊸⋈¨ colors
 
 width ← 512
@@ -40,7 +46,7 @@ lstyle ← (((↓≍"stroke-width"‿"1.4")⊏˜∊⌾⌽) ∾¨ ⊏⟜col) /yn
 
 •Out¨ (⥊out) SVG gr Ge ⟨
   Background out
-  ⟨18,¯19⟩ TT "Sorting random 4-byte integers"
+  ⟨18,¯19⟩ TT title
   ⟨
     "Size" Text˜ Pos 0‿26+dim×0.5‿1
     "Time (ns / value)" Text˜ "transform"‿"rotate(-90)"∾Pos 0‿32-˜⌽dim×0‿¯0.5
@@ -48,7 +54,7 @@ lstyle ← (((↓≍"stroke-width"‿"1.4")⊏˜∊⌾⌽) ∾¨ ⊏⟜col) /yn
   Tick {
     off⇐0‿0 ⋄ dim⇐dim
     orient⇐"vh"
-    tpos ⇐ Scale ticks ← ⟨10⋆2+↕6, {logy?5∾10×1+↕8;5×1+↕20}⟩
+    tpos ⇐ Scale ticks ← ⟨10⋆2+↕6, {logy?5∾10×1+↕8;5×1+↕30}⟩
     ttext ⇐ ⟨1e3⊸<◶Num‿("1e"∾'0'+·⌊0.5+10⋆⁼⊢)¨, Num⟩ {𝕎𝕩}¨ ticks
   }
   { logy?⟨⟩;

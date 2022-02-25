@@ -108,3 +108,20 @@ images/line.bqn res/r{_flux,p_rh}.txt > images/parts.svg
 </details>
 
 Time taken in each section: from bottom to top, range-finding, buffer initialization, insertion, and filtering.
+
+![Breakdown broken down](images/bad.svg)
+<details><summary><b>details</b></summary>
+
+```sh
+# Do benchmark
+gcc -O3 -D WORST -D PROFILE -D NOTEST bench.c && ./a.out l > res/sp_rh.txt
+gcc -O3 -D WORST -D MERGESORT -D NOTEST bench.c && ./a.out l > res/s_merge.txt
+# For comparison: don't use worst case because in flux it's better
+gcc -O3 -D FLUXSORT -D NOTEST bench.c && ./a.out l > res/r_flux.txt
+# Make image
+images/line.bqn res/{sp_rh,s_merge,r_flux}.txt > images/bad.svg
+```
+
+</details>
+
+My best guess at a worst case for RH sort: one very large element followed by many random small ones. These all get sent to the same index (for very large arrays there's a little separation) so buffer insertion mostly just insertion-sorts 16 elements at a time and merge sort has to pick up the slack. Performance is a little worse than just applying the merge sort to the initial array. So the RH graph here has a new section at the top for merge sort that the previous graph didn't. But this is a very basic, slow merge sort, and could be improved a lot.

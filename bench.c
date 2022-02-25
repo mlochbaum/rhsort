@@ -109,7 +109,13 @@ int main(int argc, char **argv) {
   for (U k=min, m=0; k<=max; k++) {
     U n = sizes[k];
     U iter = n_iter(n), off = max-k;
-    for (U e=n+off+iter-1; m<e; m++) data[m]=rand();
+    for (U e=n+off+iter-1; m<e; m++) {
+#ifndef WORST
+      data[m]=rand();
+#else
+      data[m]=rand()%1024;
+#endif
+    }
     s = n*sizeof(T);
     printf("Testing size %8ld: ", n);
     // Test
@@ -126,6 +132,9 @@ int main(int argc, char **argv) {
     PROF_INIT;
     for (U r=0; r<iter; r++) {
       memcpy(sort, data+off+r, s);
+#if WORST
+      sort[0] = 3<<28;
+#endif
       U t = monoclock();
       sort32(sort, n);
       t = monoclock()-t;
