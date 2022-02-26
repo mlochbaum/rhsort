@@ -77,7 +77,11 @@ int cmpi(const void * a, const void * b) {
 	return *(T*)a - *(T*)b;
 }
 
+#ifndef RANGES
 static U n_iter(U n) { return 1+3000000/(20+n); }
+#else
+static U n_iter(U n) { return 1000; }
+#endif
 
 int main(int argc, char **argv) {
   // Command-line arguments are max or min,max
@@ -99,25 +103,38 @@ int main(int argc, char **argv) {
   if (!ls) { for (U k=0,n=1 ; k<=max; k++,n*=10) sizes[k]=n; }
   else     { for (U k=0,n=34; k<=max; k++,n=n*1.3+(n<70)) sizes[k]=n; if(max==48)sizes[max]=10000000; }
 
+#ifndef RANGES
   U s=sizes[max]; s+=n_iter(s)-1;
   U q=sizes[min]; q+=n_iter(q)-1; if (s<q) s=q;
+#else
+  U s=1<<13; s+=n_iter(s)-1;
+#endif
   s*=sizeof(T);
   T *data = malloc(s), // Saved random data
     *sort = malloc(s), // Array to be sorted
     *chk  = malloc(s); // For checking with qsort
   srand(time(NULL));
   for (U k=min, m=0; k<=max; k++) {
-    U n = sizes[k];
+    U n = 1<<13;
     U iter = n_iter(n), off = max-k;
+#if RANGES
+    m=0;
+#endif
     for (U e=n+off+iter-1; m<e; m++) {
-#ifndef WORST
-      data[m]=rand();
-#else
+#if WORST
       data[m]=rand()%1024;
+#elif RANGES
+      data[m]=rand()%sizes[k];
+#else
+      data[m]=rand();
 #endif
     }
     s = n*sizeof(T);
+#if RANGES
+    printf("Testing range %8ld: ", sizes[k]);
+#else
     printf("Testing size %8ld: ", n);
+#endif
     // Test
 #ifndef NOTEST
     memcpy(sort, data, s); sort32(sort, n);

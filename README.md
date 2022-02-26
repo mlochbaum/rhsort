@@ -1,6 +1,6 @@
 # Robin Hood Sort: the algorithm for uniform data
 
-Robin Hood Sort is a stable numeric sorting algorithm that achieves performance several times better than the fastest comparison sorts on uniformly random arrays, with worst-case performance similar to a bad hybrid merge sort. It's in a similar category to counting sort and radix sort (and switches to counting sort on small ranges), but works on any range unlike counting sort, and can be better than radix sort for large element sizes or small arrays.
+Robin Hood Sort is a stable numeric sorting algorithm that achieves performance several times better than the fastest comparison sorts on uniformly random arrays, with worst-case performance similar to a bad hybrid merge sort. It's in a similar category to counting sort and radix sort (and [switches](#counting-sort) to counting sort on small ranges), but works on any range unlike counting sort, and can be better than radix sort for large element sizes or small arrays.
 
     Best     Average        Worst       Memory      Stable      Deterministic
     n        n log log n    n log n     n           Yes         Yes
@@ -130,3 +130,21 @@ During buffer insertion, the values in the buffer have lower indices than those 
 Stolen values are placed at the beginning of the array, which doesn't reorder them with respect to an uninserted values but could break ordering with respect to the buffer. Equal values are always adjacent in the buffer, so we just need to be sure Robin Hood doesn't grab a trailing component of a group of equal values. The fix is to walk back to the beginning of the chain (or at least the previous unequal value, but this benchmarks worse) before stealing.
 
 After insertion, filtering is obviously stable, and merging is well known to be stable.
+
+### Counting sort
+
+Because it relies on shifting values right to fit the range into the buffer, Robin Hood Sort begins to degrade when the range gets smaller than the buffer should be. This could be fixed with another loop that shifts left instead, but these ranges are a natural fit for counting sort, so it switches to that instead. To write the values out, a normal loop is used for high densities, while a strategy based on prefix sums is used for lower ones (it can be sped up [with SIMD instructions](https://en.algorithmica.org/hpc/algorithms/prefix/), but I haven't found a way to generate code like this without compiler intrinsics).
+
+![Small-range performance](images/range.svg)
+<details><summary><b>details</b></summary>
+
+```
+gcc -D RANGES             -O3 bench.c && ./a.out l 32 > res/c_rh.txt
+gcc -D RANGES -D FLUXSORT -O3 bench.c && ./a.out l 32 > res/c_flux.txt
+gcc -D RANGES -D QUADSORT -O3 bench.c && ./a.out l 32 > res/c_quad.txt
+
+# Make image; labelling hand-edited for now and doesn't match up
+images/line.bqn res/c_{quad,flux,rh}.txt > images/range.svg
+```
+
+</details>
