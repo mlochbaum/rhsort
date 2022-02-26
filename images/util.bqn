@@ -67,8 +67,10 @@ Tick ⇐ {
 # Name info
 ProcName ⇐ {
   nam ← "rh"     ‿"quad"‿"pdq" ‿"flux"‿"wolf"‿"ska_"‿"merge"
-  col ← "#24851d"‿"#6ad"‿"#c7d"‿"#b9e"‿"#cc6"‿"#da4"‿"#69a" ‿"black"
+  col ← "#24851d"‿"#6ad"‿"#c7d"‿"#b9e"‿"#cc6"‿"#da4"‿"#69a"
+  ce  ← "#22c"‿"#c22"‿"#2a7"‿"#919"
   isRH ← 0 = ni ← nam ⊐ 𝕩
+  ni +↩ (≠ce)|⊒⊸×ni=≠nam  # Cycle through extra colors
   names ← isRH ⊣◶⟨⊢∾"sort"∾"_copy"/˜"ska_"⊸≡,"Robin Hood"⟩¨ 𝕩
-  ⟨names, ni⊏col, isRH⟩
+  ⟨names, ni⊏col∾ce, isRH⟩
 }
