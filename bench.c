@@ -115,10 +115,10 @@ int main(int argc, char **argv) {
     *chk  = malloc(s); // For checking with qsort
   srand(time(NULL));
   for (U k=min, m=0; k<=max; k++) {
-    U n = 1<<13;
+    U n = sizes[k];
     U iter = n_iter(n), off = max-k;
 #if RANGES
-    m=0;
+    n=1<<13; m=0;
 #endif
     for (U e=n+off+iter-1; m<e; m++) {
 #if WORST
