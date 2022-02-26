@@ -1,11 +1,11 @@
 # Robin Hood Sort: the algorithm for uniform data
 
-Robin Hood Sort is a stable numeric sorting algorithm that achieves performance several times better than the fastest comparison sorts on uniformly random arrays, with worst-case performance similar to a hybrid merge sort. It's in a similar category to counting sort and radix sort (and switches to counting sort on small ranges), but can be useful for large ranges where counting sort isn't applicable, and can be better than radix sort for large element sizes or small arrays.
+Robin Hood Sort is a stable numeric sorting algorithm that achieves performance several times better than the fastest comparison sorts on uniformly random arrays, with worst-case performance similar to a bad hybrid merge sort. It's in a similar category to counting sort and radix sort (and switches to counting sort on small ranges), but works on any range unlike counting sort, and can be better than radix sort for large element sizes or small arrays.
 
     Best     Average        Worst       Memory      Stable      Deterministic
     n        n log log n    n log n     n           Yes         Yes
 
-The version given here is not well-tested, is only written for 4-byte integers, and will definitely fail on arrays containing both the minimum and maximum possible integer. Please don't use it directly. The main purpose of this repository is to show the radix sort people that a great benchmark on random data doesn't mean much. The main purpose of Robin Hood sort is to be used as a possible base case in quicksort algorithms like fluxsort and pdqsort, in order to take advantage of ranges where a uniform distribution seems likely and beat those radix sorts once and for all.
+The version given here is not well-tested, is only written for 4-byte integers, and will definitely fail on arrays containing both the minimum and maximum possible integer. Please don't use it directly. Robin Hood Sort is mainly intended as an alternative algorithm when sampling has determined that an array is probably close enough to uniform, so I hope to integrate it into more reliable algorithms in the future.
 
 Compared below are merge sort [quadsort](https://github.com/scandum/quadsort), top-of-the-line hybrid quicksorts [pdqsort](https://github.com/orlp/pdqsort) and [fluxsort](https://github.com/scandum/fluxsort), and radix sorts [wolfsort](https://github.com/scandum/wolfsort) (also a bit of a hybrid) and [ska_sort_copy](https://probablydance.com/2016/12/02/investigating-radix-sort/) (note that most benchmarks are based on the slower in-place [ska_sort](https://probablydance.com/2017/01/17/faster-sorting-algorithm-part-2/)). If you're wondering, Timsort is no good with integer arrays like this, and single-core IPS⁴o loses to the quicksorts on random data.
 
@@ -23,9 +23,49 @@ images/bar.bqn res/wolf.txt > images/wolf.svg
 
 </details>
 
-So Robin Hood is tested against the fastest sorting algorithms I know, on wolfsort's own benchmark suite. On the headline benchmark, well, ska_sort is hard to beat. But against stable algorithms there's no contest! Surprised? Well, Robin Hood is very skilled—don't forget it—but his greatest skill is cheating.
+So Robin Hood is tested against the fastest sorting algorithms I know, on wolfsort's own benchmark suite. On the headline benchmark, well, ska_sort is hard to beat (has the sheep exchanged clothing with the wolf?). But against stable algorithms there's no contest! Robin Hood is very skilled—don't forget it—but his greatest skill is cheating.
 
-As you might guess, "ascending tiles" hints at a significant problem: that the range might be separated into clusters instead of uniform. When hybridized with quicksort, it should mostly be possible to rule these cases out during median selection, and quicksort partitioning naturally splits off clusters, which could then be passed to RH.
+It's an algorithm based on daring optimism: allocate more than enough space for all values, then simply try to place each one where it ought to go, numerically speaking ([details below](#algorithm)). If there's no room… then Robin Hood must rely on trickery.
+
+![Performance line plot](images/rand.svg)
+<details><summary><b>details</b></summary>
+
+```sh
+# Perform the benchmarks; save results
+gcc -O3             -D NOTEST bench.c && ./a.out l > res/r_rh.txt
+gcc -O3 -D FLUXSORT -D NOTEST bench.c && ./a.out l > res/r_flux.txt
+gcc -O3 -D WOLFSORT -D NOTEST bench.c && ./a.out l > res/r_wolf.txt
+g++ -w -fpermissive -O3 -D SKACOPY -D NOTEST bench.c && ./a.out l > res/r_ska_.txt
+
+# Make chart (requires BQN)
+images/line.bqn res/r_{flux,wolf,ska_,rh}.txt > images/rand.svg
+```
+
+</details>
+
+Here's how it scales on random data. Robin Hood is without equal under length 10,000 for this good—but not best—case. Beyond that the picture is not so nice because of the large buffer and scattershot approach in filling it. My L2 cache fits 128k 4-byte integers, and there's a clear increase as it's overwhelmed. But for the intended use this is no concern: fluxsort (like any quicksort) works by splitting the array in half, and sorting recursively. Switching to Robin Hood at the appropriate length would make an overall algorithm with fluxsort's very clean cache usage, and reduce the required buffer size as well. Imagine cutting off the right side of the fluxsort graph to affix it to Robin Hood's line lower down.
+
+![Breakdown broken down](images/bad.svg)
+<details><summary><b>details</b></summary>
+
+```sh
+# Do benchmark
+gcc -O3 -D WORST -D PROFILE -D NOTEST bench.c && ./a.out l > res/sp_rh.txt
+gcc -O3 -D WORST -D MERGESORT -D NOTEST bench.c && ./a.out l > res/s_merge.txt
+# For comparison: don't use worst case because in flux it's better
+gcc -O3 -D QUADSORT -D NOTEST bench.c && ./a.out l > res/s_quad.txt
+gcc -O3 -D FLUXSORT -D NOTEST bench.c && ./a.out l > res/r_flux.txt
+# Make image
+images/line.bqn res/{sp_rh,s_merge,s_quad,r_flux}.txt > images/bad.svg
+```
+
+</details>
+
+As you might guess, "Asc. tiles" from the bar chart hints at a significant problem: the range can be clumpy instead of uniform. Above is my best guess at a worst case for RH sort: one very large element followed by many random small ones. These all get sent to the same index (with maybe a slight difference for very large arrays). But the Robin Hood algorithm has a mechanism to rescue them from the buffer, 16 values at a time. These values are then merge sorted. The buffer insertion amounts to an insertion sort on these blocks of 16, which is why it can be said that RH degrades to a bad hybrid merge sort.
+
+The RH graph here is split into a few parts. The large ones are insertion near the bottom and merging at the top. Also shown is a pure merge sort based on the same merging code. This merging code is not fast (for now at least), and a better method like quadsort would improve things a lot.
+
+Horrible cases like this are easily detectable in a quicksort during median selection. Figuring out how bad it can get without being detectable from a sample will require some more benchmarks and statistics.
 
 ### Algorithm
 
@@ -34,6 +74,22 @@ The main idea of Robin Hood Sort is to allocate a buffer a few times (2.5 or mor
 Robin Hood hashing works on the assumption the hashes are uniformly distributed. But the real Robin Hood doesn't live in some kind of communist utopia. Robin Hood Sort works even in non-ideal conditions. The strategy is that when an area gets particularly rich in array values, some of them are scooped up and moved back to the beginning of the original array, which we're not using any more. These stolen values will later be merged—hey, you know, this is much more like Robin Hood than that other part. Let's pretend this is where the name comes from. Anyway, once all the entries from the original array have been placed, the remaining ones from the buffer are moved back, after the stolen ones. Then the stolen values are merged (as in merge sort) with each other, and one last merge with the remaining values completes the sort.
 
 Stealing happens after a value is inserted to the buffer. It's triggered based on the number of positions touched, starting at the target position and ending at the last value pushed out of the way. The simplest form is to move the entire chain. This starts at the first nonempty value, possibly before the target position, to avoid moving a value before one that's equal to it and breaking stability (besides, stealing more values is faster overall). But a modification speeds things up: round down to the nearest multiple of a configurable block size, which is a power of two. Then because every block is sorted, the first few passes of merge sorting on stolen values can be skipped. Since chains in the buffer are constructed by a process that's basically like insertion sort, we should expect overall performance in the worst case to resemble a hybrid merge sort, where smaller merges are skipped in favor of insertion sort. Here, the block size is set to 16. The initial threshold for stealing is twice the block size, because merging any number of stolen values with the rest of the array is costly, and it's reduced to the block size the first time any values are stolen.
+
+![Performance breakdown](images/parts.svg)
+<details><summary><b>details</b></summary>
+
+```sh
+# Do benchmark
+gcc -O3 -D PROFILE -D NOTEST bench.c && ./a.out l > res/rp_rh.txt
+# For comparison
+gcc -O3 -D FLUXSORT -D NOTEST bench.c && ./a.out l > res/r_flux.txt
+# Make image
+images/line.bqn res/r{_flux,p_rh}.txt > images/parts.svg
+```
+
+</details>
+
+Time taken in each section: from bottom to top, range-finding, buffer initialization, insertion, and filtering.
 
 ### Analysis
 
@@ -74,54 +130,3 @@ During buffer insertion, the values in the buffer have lower indices than those 
 Stolen values are placed at the beginning of the array, which doesn't reorder them with respect to an uninserted values but could break ordering with respect to the buffer. Equal values are always adjacent in the buffer, so we just need to be sure Robin Hood doesn't grab a trailing component of a group of equal values. The fix is to walk back to the beginning of the chain (or at least the previous unequal value, but this benchmarks worse) before stealing.
 
 After insertion, filtering is obviously stable, and merging is well known to be stable.
-
-### Further benchmarks
-
-![Performance line plot](images/rand.svg)
-<details><summary><b>details</b></summary>
-
-```sh
-# Perform the benchmarks; save results
-gcc -O3             -D NOTEST bench.c && ./a.out l > res/r_rh.txt
-gcc -O3 -D FLUXSORT -D NOTEST bench.c && ./a.out l > res/r_flux.txt
-gcc -O3 -D WOLFSORT -D NOTEST bench.c && ./a.out l > res/r_wolf.txt
-g++ -w -fpermissive -O3 -D SKACOPY -D NOTEST bench.c && ./a.out l > res/r_ska_.txt
-
-# Make chart (requires BQN)
-images/line.bqn res/r_{flux,wolf,ska_,rh}.txt > images/rand.svg
-```
-
-</details>
-
-![Performance breakdown](images/parts.svg)
-<details><summary><b>details</b></summary>
-
-```sh
-# Do benchmark
-gcc -O3 -D PROFILE -D NOTEST bench.c && ./a.out l > res/rp_rh.txt
-# For comparison
-gcc -O3 -D FLUXSORT -D NOTEST bench.c && ./a.out l > res/r_flux.txt
-# Make image
-images/line.bqn res/r{_flux,p_rh}.txt > images/parts.svg
-```
-
-</details>
-
-Time taken in each section: from bottom to top, range-finding, buffer initialization, insertion, and filtering.
-
-![Breakdown broken down](images/bad.svg)
-<details><summary><b>details</b></summary>
-
-```sh
-# Do benchmark
-gcc -O3 -D WORST -D PROFILE -D NOTEST bench.c && ./a.out l > res/sp_rh.txt
-gcc -O3 -D WORST -D MERGESORT -D NOTEST bench.c && ./a.out l > res/s_merge.txt
-# For comparison: don't use worst case because in flux it's better
-gcc -O3 -D FLUXSORT -D NOTEST bench.c && ./a.out l > res/r_flux.txt
-# Make image
-images/line.bqn res/{sp_rh,s_merge,r_flux}.txt > images/bad.svg
-```
-
-</details>
-
-My best guess at a worst case for RH sort: one very large element followed by many random small ones. These all get sent to the same index (for very large arrays there's a little separation) so buffer insertion mostly just insertion-sorts 16 elements at a time and merge sort has to pick up the slack. Performance is a little worse than just applying the merge sort to the initial array. So the RH graph here has a new section at the top for merge sort that the previous graph didn't. But this is a very basic, slow merge sort, and could be improved a lot.
