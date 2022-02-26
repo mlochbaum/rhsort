@@ -14,13 +14,17 @@ titles ← "Sorting "⊸∾¨ ⟨
 ⟩
 
 ToNats ← ((>⟜«0⊸≤) / 0(0⊸≤××⟜10⊸+)`⊢) · 10⊸≤⊸(¬⊸×-⊣) -⟜'0'
-ParsePath ← {
+ParseHead ← {
+  title‿name ⇐ (+`':'⊸=)⊸⊔ 𝕩
+  name ↩ (-4+5×"ska_sort_copy"⊸≡)⊸↓2↓name
+}
+ParsePath ← { # Old style with no header and info in the filename
   name ⇐ (»∨`)∘=⟜'_'⊸/ fn ← ∧`∘≠⟜'.'⊸/ •file.Name 𝕩
   title ⇐ (⊑"sc"⊐⊑fn) ⊑ 1⌽titles
 }
 Read ← {
-  info ← ParsePath 𝕩
-  l ← •file.Lines 𝕩
+  l ← •file.Lines f←𝕩
+  info ← {'S'≡⊑𝕩?l↓˜↩1⋄ParseHead𝕩; ParsePath f} ⊑l
   pr ← "profile" ∨´∘⍷⊑l
   c ← { ¬pr ? 3 ; m←⌈´n←1+´¨'.'=l ⋄ l∾¨↩⥊∘/⟜(≍" 0")¨m-n ⋄ m }
   tab ← ∘‿c ⥊ ToNats '.'⊸≠⊸/ ∾l

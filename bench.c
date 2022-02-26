@@ -3,6 +3,34 @@
 #include <string.h>
 #include <time.h>
 
+// Options for sorting algorithms:
+#if MERGESORT
+  #define sortname "mergesort"
+#elif QUADSORT
+  #define sortname "quadsort"
+#elif FLUXSORT
+  #define sortname "fluxsort"
+#elif WOLFSORT
+  #define sortname "wolfsort"
+#elif SKASORT
+  #define sortname "ska_sort"
+#elif SKACOPY
+  #define sortname "ska_sort_copy"
+#elif PDQSORT
+  #define sortname "pdqsort"
+#else
+  #define sortname "rhsort"
+#endif
+
+// Options for test to perform:
+#if RANGES  // Small range
+  #define datadesc "10,000 small-range 4-byte integers"
+#elif WORSE // RH worst case
+  #define datadesc "small-range plus outlier"
+#else       // Random
+  #define datadesc "random 4-byte integers"
+#endif
+
 typedef size_t U;
 static U monoclock(void) {
   struct timespec ts;
@@ -84,6 +112,7 @@ static U n_iter(U n) { return 1000; }
 #endif
 
 int main(int argc, char **argv) {
+  printf("Sorting %s: %s\n", datadesc, sortname);
   // Command-line arguments are max or min,max
   // Inclusive range, with sizes 10^n tested
   U min=3, max=6; int ls=0;
