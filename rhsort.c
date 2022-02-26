@@ -54,8 +54,8 @@ static void count(T *x, U n, T min, U range) {
     for (U i=0, s=0; i<range-1; i++) { s+=count[i]; x[s]++; }
     // Prefix sum
     { U i=0;
-      for (; i<n-4; i+=4) { x[i+4] += x[i+3] += x[i+2] += x[i+1] += x[i]; }
-      for (; i<n-1; i++) { x[i+1] += x[i]; }
+      for (; i+4<n; i+=4) { x[i+4] += x[i+3] += x[i+2] += x[i+1] += x[i]; }
+      for (; i+1<n; i++) { x[i+1] += x[i]; }
     }
   }
   free(count);
