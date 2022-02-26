@@ -10,7 +10,7 @@ n ← ≠input
 titles ← "Sorting "⊸∾¨ ⟨
   "random 4-byte integers"
   "small-range plus outlier"
-  "8192 small-range 4-byte integers"
+  "10,000 small-range 4-byte integers"
 ⟩
 
 ToNats ← ((>⟜«0⊸≤) / 0(0⊸≤××⟜10⊸+)`⊢) · 10⊸≤⊸(¬⊸×-⊣) -⟜'0'

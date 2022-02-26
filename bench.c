@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
   U s=sizes[max]; s+=n_iter(s)-1;
   U q=sizes[min]; q+=n_iter(q)-1; if (s<q) s=q;
 #else
-  U s=1<<13; s+=n_iter(s)-1;
+  U s=10000; s+=n_iter(s)-1;
 #endif
   s*=sizeof(T);
   T *data = malloc(s), // Saved random data
@@ -118,7 +118,7 @@ int main(int argc, char **argv) {
     U n = sizes[k];
     U iter = n_iter(n), off = max-k;
 #if RANGES
-    n=1<<13; m=0;
+    n=10000; m=0;
 #endif
     for (U e=n+off+iter-1; m<e; m++) {
 #if WORST
