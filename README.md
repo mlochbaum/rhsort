@@ -143,7 +143,7 @@ gcc -D RANGES             -O3 bench.c && ./a.out l 32 > res/c_rh.txt
 gcc -D RANGES -D FLUXSORT -O3 bench.c && ./a.out l 32 > res/c_flux.txt
 gcc -D RANGES -D QUADSORT -O3 bench.c && ./a.out l 32 > res/c_quad.txt
 
-# Make image; labelling hand-edited for now and doesn't match up
+# Make image
 images/line.bqn res/c_{quad,flux,rh}.txt > images/range.svg
 ```
 

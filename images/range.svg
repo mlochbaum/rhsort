@@ -1,8 +1,8 @@
 <svg viewBox='-50 -40 582 367.6' height='551.400' width='873' xmlns='http://www.w3.org/2000/svg'>
   <g stroke-width='1.2' font-size='14px' text-anchor='middle'>
     <rect fill='white' x='-50' y='-40' width='582' height='367.6'/>
-    <text dy='0.33em' font-size='18px' x='256' y='-19'>Sorting random 4-byte integers</text>
-    <text dy='0.33em' x='256' y='307.6'>Length to range ratio</text>
+    <text dy='0.33em' font-size='18px' x='256' y='-19'>Sorting 8192 small-range 4-byte integers</text>
+    <text dy='0.33em' x='256' y='307.6'>Density (length / range)</text>
     <text dy='0.33em' transform='rotate(-90)' x='-140.8' y='-32'>Time (ns / value)</text>
     <g stroke-width='0.3' stroke='#555'>
       <path d='M494.769 0v281.6'/>

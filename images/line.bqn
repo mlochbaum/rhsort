@@ -4,28 +4,43 @@ util ← •Import "util.bqn"
 Num‿Pos‿SVG‿Ge‿Text‿TSize‿Path‿Background‿Outline‿Legend‿Tick ← util
 
 files‿opts ← 2 ↑ ('-'=⊑¨)⊸⊔ •args
-fname ← (∧`∘≠⟜'.'⊸/ •file.Name)¨ files
 input ← •wdpath⊸•file.At¨ files
 n ← ≠input
 
-title ← (⊑'s'∊⊑¨fname) ⊑ ⟨
-  "Sorting random 4-byte integers"
-  "Sorting small-range plus outlier"
+titles ← "Sorting "⊸∾¨ ⟨
+  "random 4-byte integers"
+  "small-range plus outlier"
+  "8192 small-range 4-byte integers"
 ⟩
 
+ToNats ← ((>⟜«0⊸≤) / 0(0⊸≤××⟜10⊸+)`⊢) · 10⊸≤⊸(¬⊸×-⊣) -⟜'0'
+ParsePath ← {
+  name ⇐ (»∨`)∘=⟜'_'⊸/ fn ← ∧`∘≠⟜'.'⊸/ •file.Name 𝕩
+  title ⇐ (⊑"sc"⊐⊑fn) ⊑ 1⌽titles
+}
 Read ← {
-  ToNats ← ((>⟜«0⊸≤) / 0(0⊸≤××⟜10⊸+)`⊢) · 10⊸≤⊸(¬⊸×-⊣) -⟜'0'
-  pr ← "profile" ∨´∘⍷⊑ l ← •file.Lines 𝕩
+  info ← ParsePath 𝕩
+  l ← •file.Lines 𝕩
+  pr ← "profile" ∨´∘⍷⊑l
   c ← { ¬pr ? 3 ; m←⌈´n←1+´¨'.'=l ⋄ l∾¨↩⥊∘/⟜(≍" 0")¨m-n ⋄ m }
   tab ← ∘‿c ⥊ ToNats '.'⊸≠⊸/ ∾l
-  pr◶⟨0‿2⊸⊏, ⊏∾·+`3⊸↓⟩ ⍉ ÷⟜1e3⌾(1↓⍉) 4 ↓ tab
+  info ⋈ pr◶⟨0‿2⊸⊏, ⊏∾·+`3⊸↓⟩ ⍉ ÷⟜1e3⌾(1↓⍉) 4 ↓ tab
 }
 
-dat ← Read¨ input
+info‿dat ← <˘⍉> Read¨ input
 x ← ⊏⊑dat
 ! ∧´(x≡⊏)¨1↓dat
 
-names‿colors‿rhf ← util.ProcName (»∨`)∘=⟜'_'⊸/¨ fname
+! 1≥+´∊ 0⊸≠⊸/ tind ← titles ⊐ {𝕩.title}¨ info
+type ← ⌈´ tind
+title ← ((⊑tind⊐type) ⊑ info).title
+
+xr ← 2=type  # x indicates range
+logy←∧´1=yn←1-˜≠¨dat  # Don't use log-scale y to show parts
+
+x (2⋆13)⊸÷⍟xr↩
+
+names‿colors‿rhf ← util.ProcName {𝕩.name}¨ info
 col ← "stroke"⊸⋈¨ colors
 
 width ← 512
@@ -34,7 +49,6 @@ off ← 50‿40 ⋄ end ← 20‿46
 gr ← "stroke-width=1.2|font-size=14px|text-anchor=middle"
 TT ← < TSize⊸∾⟜(Pos(width÷2)⊸⋈)´⊸Text
 
-logy←∧´1=yn←1-˜≠¨dat  # Don't use log-scale y to show parts
 Log ← ⋆⁼⌾(logy⊑⊑‿⊢)
 win ← -˜`¨ bounds ← 0⌾(⊑1⊑⊢)⍟(¬logy) (⌊´≍⌈´)∘⥊¨ Log xy ← ⟨x, ∾1↓¨dat⟩
 dim ← width (⊣⋈×) 0.55
@@ -48,13 +62,16 @@ lstyle ← (((↓≍"stroke-width"‿"1.4")⊏˜∊⌾⌽) ∾¨ ⊏⟜col) /yn
   Background out
   ⟨18,¯19⟩ TT title
   ⟨
-    "Size" Text˜ Pos 0‿26+dim×0.5‿1
+    (xr⊑"Size"‿"Density (length / range)") Text˜ Pos 0‿26+dim×0.5‿1
     "Time (ns / value)" Text˜ "transform"‿"rotate(-90)"∾Pos 0‿32-˜⌽dim×0‿¯0.5
   ⟩
   Tick {
     off⇐0‿0 ⋄ dim⇐dim
     orient⇐"vh"
-    tpos ⇐ Scale ticks ← ⟨10⋆2+↕6, {logy?5∾10×1+↕8;5×1+↕30}⟩
+    tpos ⇐ Scale ticks ← ⟨
+      {xr ? 2⋆10-↕20 ; 10⋆2+↕6}
+      {logy ? (1+↕5)∾10×1+↕8 ; 5×1+↕30}
+    ⟩
     ttext ⇐ ⟨1e3⊸<◶Num‿("1e"∾'0'+·⌊0.5+10⋆⁼⊢)¨, Num⟩ {𝕎𝕩}¨ ticks
   }
   { logy?⟨⟩;
@@ -67,7 +84,7 @@ lstyle ← (((↓≍"stroke-width"‿"1.4")⊏˜∊⌾⌽) ∾¨ ⊏⟜col) /yn
   Outline 0‿0≍dim
   Legend {
     label ⇐ names ⋄ isRH ⇐ rhf
-    place ⇐ 10‿6
+    place ⇐ 10‿(xr⊑6‿208)
     width ⇐ 134 ⋄ spacing ⇐ 18 ⋄ pad ⇐ 6
     Samples ⇐ "stroke-width=2.6" Ge col ≍⊸Path⟜(∾"M h"∾¨Num)¨ (8∾∾⟜22)¨
   }
