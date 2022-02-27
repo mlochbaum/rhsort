@@ -36,11 +36,20 @@ static void merge(T *a, U l, U n, T *aux) {
   }
 }
 
+#if QUADMERGE
+  #define cmp(a,b) (*(a) > *(b))
+  #include "wolfsort/src/quadsort.h" // Call wolfbench.sh
+#endif
+
 // Merge array x of size n, if units of length block are pre-sorted
 static void mergefrom(T *x, U n, U block, T *aux) {
+#if QUADMERGE
+  quad_merge32(x, aux, n, n, block, NULL);
+#else
   for (U w=block; w<n; w*=2)
     for (U i=0, ww=2*w; i<n-w; i+=ww)
       merge(x+i, w, n-i<ww?n-i:ww, aux);
+#endif
 }
 
 // Counting sort of the n values starting at x

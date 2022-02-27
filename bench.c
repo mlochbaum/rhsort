@@ -24,6 +24,12 @@
   #define sortname "rhsort"
 #endif
 
+#if QUADMERGE
+  #define presortname "quad+"
+#else
+  #define presortname ""
+#endif
+
 // Options for test to perform:
 #if RANGES  // Small range
   #define datadesc "10,000 small-range 4-byte integers"
@@ -114,7 +120,7 @@ static U n_iter(U n) { return 1000; }
 #endif
 
 int main(int argc, char **argv) {
-  printf("Sorting %s: %s\n", datadesc, sortname);
+  printf("Sorting %s: %s%s\n", datadesc, presortname, sortname);
   // Command-line arguments are max or min,max
   // Inclusive range, with sizes 10^n tested
   U min=3, max=6; int ls=0;
