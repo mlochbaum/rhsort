@@ -101,6 +101,9 @@ void rhsort32(T *array, U n) {
   // Goes down to BLOCK once we know we have to merge
   U threshold = 2*BLOCK;
   U sz = r + threshold;                 // Buffer size
+#if BRAVE
+  sz = r + n;
+#endif
 
   // Allocate buffer, and fill with sentinels
   T *aux = malloc((sz>n?sz:n)*sizeof(T)); // >=n for merges later
@@ -128,6 +131,7 @@ void rhsort32(T *array, U n) {
     aux[j]=e;
     f += 1;  // To account for just-inserted e
 
+#ifndef BRAVE
     // Bad collision: send chain back to x
     if (RARE(f-j0 >= threshold)) {
       threshold = BLOCK;
@@ -148,6 +152,7 @@ void rhsort32(T *array, U n) {
         aux[pr++] = e;
       }
     }
+#endif
   }
   #undef POS
   PROF_END(2);
@@ -167,6 +172,7 @@ void rhsort32(T *array, U n) {
   }
   PROF_END(3);
 
+#ifndef BRAVE
   // Merge stolen blocks back in if necessary
   U l = xb-x;  // Size of those blocks
   if (l) {
@@ -177,6 +183,7 @@ void rhsort32(T *array, U n) {
     merge(x, l, n, aux);
     PROF_END(4);
   }
+#endif
   PROF_CONT(1);
   free(aux);  // All done!
   PROF_END(1);

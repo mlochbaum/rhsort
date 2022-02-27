@@ -25,9 +25,15 @@
 #endif
 
 #if QUADMERGE
-  #define presortname "quad+"
+  #define quadness "quad+"
 #else
-  #define presortname ""
+  #define quadness ""
+#endif
+
+#if BRAVE
+  #define bravery "brave+"
+#else
+  #define bravery ""
 #endif
 
 // Options for test to perform:
@@ -120,7 +126,7 @@ static U n_iter(U n) { return 1000; }
 #endif
 
 int main(int argc, char **argv) {
-  printf("Sorting %s: %s%s\n", datadesc, presortname, sortname);
+  printf("Sorting %s: %s%s%s\n", datadesc, bravery, quadness, sortname);
   // Command-line arguments are max or min,max
   // Inclusive range, with sizes 10^n tested
   U min=3, max=6; int ls=0;
