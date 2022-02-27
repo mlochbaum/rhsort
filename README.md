@@ -43,7 +43,7 @@ images/line.bqn res/r_{flux,wolf,ska_,rh}.txt > images/rand.svg
 
 </details>
 
-Here's how it scales on random data. Robin Hood is without equal under length 10,000 for this good—but not best—case. Beyond that the picture is not so nice because of the large buffer and scattershot approach in filling it. My L2 cache fits 128k 4-byte integers, and there's a clear increase as it's overwhelmed. But for the intended use this is no concern: fluxsort (like any quicksort) works by splitting the array in half, and sorting recursively. Switching to Robin Hood at the appropriate length would make an overall algorithm with fluxsort's very clean cache usage, and reduce the required buffer size as well. Imagine cutting off the right side of the fluxsort graph to affix it to Robin Hood's line lower down.
+Here's how it scales on random data. Robin Hood is without equal under length 10,000 for this good—but not best—case. Beyond that the picture is not so nice because of the large buffer and scattershot approach in filling it. My L2 cache fits 128k 4-byte integers, and there's a clear increase as it's overwhelmed. But for the intended use this is no concern: fluxsort (like any quicksort) works by splitting the array in half, and sorting recursively. Switching to Robin Hood at the appropriate length would make an overall algorithm with fluxsort's very clean cache usage, and reduce the required buffer size as well. Imagine cutting off the right side of the fluxsort graph to affix it to Robin Hood's line lower down. The Quad Merge Robin [variant](#variations) does this with quadsort.
 
 ![Breakdown broken down](images/bad.svg)
 <details><summary><b>details</b></summary>
@@ -130,6 +130,14 @@ During buffer insertion, the values in the buffer have lower indices than those 
 Stolen values are placed at the beginning of the array, which doesn't reorder them with respect to an uninserted values but could break ordering with respect to the buffer. Equal values are always adjacent in the buffer, so we just need to be sure Robin Hood doesn't grab a trailing component of a group of equal values. The fix is to walk back to the beginning of the chain (or at least the previous unequal value, but this benchmarks worse) before stealing.
 
 After insertion, filtering is obviously stable, and merging is well known to be stable.
+
+### Variations
+
+The following options can be applied when compiling rhsort.c:
+
+- Brave Robin (`-D BRAVE`) disables block stealing, leading to O(n) average case performance (like hash table insertion) and O(n²) worst case. It needs to allocate and initialize more memory because overflows can be longer, leading to slower actual performance except at small sizes.
+- Quad Robin (`-D QUADMERGE`) uses quadsort's methods for merging stolen blocks together, making the worst case significantly better, about 2ns/value worse than quadsort. It doesn't use `tail_merge32` for merging the blocks back in at the end, as it seems this slows things down.
+- Merge Robin (function `rhmergesort32`) is an O(n log(n)) merge sort hybrid that uses Robin Hood sort for sizes below 2<sup>16</sup>, then merges these units together. It's faster for large arrays, but only if `QUADMERGE` is also used.
 
 ### Counting sort
 
