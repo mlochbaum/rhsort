@@ -36,6 +36,13 @@ static void merge(T *a, U l, U n, T *aux) {
   }
 }
 
+// Merge array x of size n, if units of length block are pre-sorted
+static void mergefrom(T *x, U n, U block, T *aux) {
+  for (U w=block; w<n; w*=2)
+    for (U i=0, ww=2*w; i<n-w; i+=ww)
+      merge(x+i, w, n-i<ww?n-i:ww, aux);
+}
+
 // Counting sort of the n values starting at x
 static void count(T *x, U n, T min, U range) {
   U *count = calloc(range,sizeof(U));
@@ -156,9 +163,7 @@ void rhsort32(T *array, U n) {
   if (l) {
     // Sort x[0..l]
     PROF_START(4);
-    for (U w=BLOCK; w<l; w*=2)
-      for (U i=0, ww=2*w; i<l-w; i+=ww)
-        merge(x+i, w, l-i<ww?l-i:ww, aux);
+    mergefrom(x, n, BLOCK, aux);
     // And merge with the rest of x
     merge(x, l, n, aux);
     PROF_END(4);
@@ -166,4 +171,14 @@ void rhsort32(T *array, U n) {
   PROF_CONT(1);
   free(aux);  // All done!
   PROF_END(1);
+}
+
+void rhmergesort32(T *x, U n) {
+  static const U size = 1<<16;
+  for (U i=0; i<n; i+=size) rhsort32(x+i, n>i+size ? size : n-i);
+  PROF_START(5);
+  T *aux = malloc(n*sizeof(T));
+  mergefrom(x, n, size, aux);
+  free(aux);
+  PROF_END(5);
 }

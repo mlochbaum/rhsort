@@ -4,9 +4,7 @@
 #include <time.h>
 
 // Options for sorting algorithms:
-#if MERGESORT
-  #define sortname "mergesort"
-#elif QUADSORT
+#if QUADSORT
   #define sortname "quadsort"
 #elif FLUXSORT
   #define sortname "fluxsort"
@@ -18,6 +16,10 @@
   #define sortname "ska_sort_copy"
 #elif PDQSORT
   #define sortname "pdqsort"
+#elif MERGESORT
+  #define sortname "mergesort"
+#elif RHMERGESORT
+  #define sortname "rhmergesort"
 #else
   #define sortname "rhsort"
 #endif
@@ -75,13 +77,7 @@ static void printprof(U denom) {
 #endif
 
 static void sort32(T *x, U n) {
-#if MERGESORT
-  T *aux = malloc(n*sizeof(T));
-  for (U w=1; w<n; w*=2)
-    for (U i=0, ww=2*w; i<n-w; i+=ww)
-      merge(x+i, w, n-i<ww?n-i:ww, aux);
-  free(aux);
-#elif QUADSORT
+#if QUADSORT
   quadsort32(x, n, NULL);
 #elif FLUXSORT
   fluxsort32(x, n, NULL);
@@ -95,6 +91,12 @@ static void sort32(T *x, U n) {
   free(aux);
 #elif PDQSORT
   pdqsort(x, x+n);
+#elif MERGESORT
+  T *aux = malloc(n*sizeof(T));
+  mergefrom(x, n, 1, aux);
+  free(aux);
+#elif RHMERGESORT
+  rhmergesort32(x, n);
 #else
   rhsort32(x, n);
 #endif
