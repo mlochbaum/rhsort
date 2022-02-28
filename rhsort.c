@@ -95,7 +95,8 @@ void rhsort32(T *array, U n) {
 
   // Planning for the buffer
   PROF_START(1);
-  T s = max+1;                          // Sentinel value
+  // Sentinel value: the buffer swallows these but count recovers them
+  T s = max;
   U sh = 0;                             // Contract to fit range
   while (r>5*n) { sh++; r>>=1; }        // Shrink to stay at O(n) memory
   // Goes down to BLOCK once we know we have to merge
@@ -170,6 +171,8 @@ void rhsort32(T *array, U n) {
     for (; i<sz; i++) WR(0);
     #undef WR
   }
+  // Recover maximum/sentinel elements based on total count
+  while (xt < x+n) *xt++ = s;
   PROF_END(3);
 
 #ifndef BRAVE
