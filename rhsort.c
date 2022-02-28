@@ -112,7 +112,7 @@ void rhsort32(T *array, U n) {
 
   // Main loop: insert array entries into buffer
   PROF_START(2);
-  #define POS(E) ((U)((E)-min) >> sh)
+  #define POS(E) ((U)(UT)((E)-min) >> sh)
   for (U i=0; i<n; i++) {
     T e = x[i];               // Entry to be inserted
     U j = POS(e);             // Target position

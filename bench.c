@@ -115,8 +115,9 @@ static void sort32(T *x, U n) {
 }
 
 // For qsort
-int cmpi(const void * a, const void * b) {
-	return *(T*)a - *(T*)b;
+int cmpi(const void * ap, const void * bp) {
+  T a=*(T*)ap, b=*(T*)bp;
+  return (a>b) - (a<b);
 }
 
 #ifndef RANGES
