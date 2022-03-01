@@ -6,17 +6,17 @@
     <text dy='0.33em' font-size='15px' x='297' y='681'>Nanoseconds per element</text>
     <text dy='0.33em' font-size='11px' x='297' y='701'>i5-6200U CPU @ 2.30GHz; compiled with g++ -O3</text>
     <g stroke-width='0.3' stroke='#555'>
-      <path d='M196.027 56v594'/>
-      <path d='M292.054 56v594'/>
-      <path d='M388.081 56v594'/>
-      <path d='M484.109 56v594'/>
+      <path d='M185.447 56v594'/>
+      <path d='M270.895 56v594'/>
+      <path d='M356.343 56v594'/>
+      <path d='M441.791 56v594'/>
     </g>
     <g font-size='11px'>
       <text dy='0.33em' x='100' y='659.5'>0</text>
-      <text dy='0.33em' x='196.027' y='659.5'>10</text>
-      <text dy='0.33em' x='292.054' y='659.5'>20</text>
-      <text dy='0.33em' x='388.081' y='659.5'>30</text>
-      <text dy='0.33em' x='484.109' y='659.5'>40</text>
+      <text dy='0.33em' x='185.447' y='659.5'>10</text>
+      <text dy='0.33em' x='270.895' y='659.5'>20</text>
+      <text dy='0.33em' x='356.343' y='659.5'>30</text>
+      <text dy='0.33em' x='441.791' y='659.5'>40</text>
     </g>
     <g text-anchor='end'>
       <text dy='0.33em' x='95' y='83'>Random</text>
@@ -33,86 +33,86 @@
     </g>
     <g stroke='#111'>
       <g fill='#6ad'>
-        <rect x='100' y='62' width='358.373' height='7'/>
-        <rect x='100' y='116' width='299.221' height='7'/>
-        <rect x='100' y='170' width='11.427' height='7'/>
-        <rect x='100' y='224' width='105.053' height='7'/>
-        <rect x='100' y='278' width='43.788' height='7'/>
-        <rect x='100' y='332' width='7.298' height='7'/>
-        <rect x='100' y='386' width='105.053' height='7'/>
-        <rect x='100' y='440' width='117.153' height='7'/>
-        <rect x='100' y='494' width='206.458' height='7'/>
-        <rect x='100' y='548' width='114.368' height='7'/>
-        <rect x='100' y='602' width='293.555' height='7'/>
+        <rect x='100' y='62' width='320.942' height='7'/>
+        <rect x='100' y='116' width='267.280' height='7'/>
+        <rect x='100' y='170' width='10.339' height='7'/>
+        <rect x='100' y='224' width='92.881' height='7'/>
+        <rect x='100' y='278' width='38.964' height='7'/>
+        <rect x='100' y='332' width='6.494' height='7'/>
+        <rect x='100' y='386' width='92.967' height='7'/>
+        <rect x='100' y='440' width='105.528' height='7'/>
+        <rect x='100' y='494' width='186.190' height='7'/>
+        <rect x='100' y='548' width='101.426' height='7'/>
+        <rect x='100' y='602' width='260.445' height='7'/>
       </g>
       <g fill='#c7d'>
-        <rect x='100' y='69' width='343.873' height='7'/>
-        <rect x='100' y='123' width='94.106' height='7'/>
-        <rect x='100' y='177' width='13.923' height='7'/>
+        <rect x='100' y='69' width='305.390' height='7'/>
+        <rect x='100' y='123' width='84.507' height='7'/>
+        <rect x='100' y='177' width='12.133' height='7'/>
         <rect x='100' y='231' width='394' height='7'/>
-        <rect x='100' y='285' width='359.814' height='7'/>
-        <rect x='100' y='339' width='25.063' height='7'/>
-        <rect x='100' y='393' width='391.023' height='7'/>
-        <rect x='100' y='447' width='335.423' height='7'/>
-        <rect x='100' y='501' width='346.370' height='7'/>
-        <rect x='100' y='555' width='295.283' height='7'/>
-        <rect x='100' y='609' width='340.128' height='7'/>
+        <rect x='100' y='285' width='320.771' height='7'/>
+        <rect x='100' y='339' width='22.472' height='7'/>
+        <rect x='100' y='393' width='355.890' height='7'/>
+        <rect x='100' y='447' width='297.614' height='7'/>
+        <rect x='100' y='501' width='310.346' height='7'/>
+        <rect x='100' y='555' width='265.742' height='7'/>
+        <rect x='100' y='609' width='303.681' height='7'/>
       </g>
       <g fill='#b9e'>
-        <rect x='100' y='76' width='238.531' height='7'/>
-        <rect x='100' y='130' width='94.202' height='7'/>
-        <rect x='100' y='184' width='5.569' height='7'/>
-        <rect x='100' y='238' width='108.510' height='7'/>
-        <rect x='100' y='292' width='47.917' height='7'/>
-        <rect x='100' y='346' width='6.913' height='7'/>
-        <rect x='100' y='400' width='108.798' height='7'/>
-        <rect x='100' y='454' width='120.898' height='7'/>
-        <rect x='100' y='508' width='210.875' height='7'/>
-        <rect x='100' y='562' width='157.772' height='7'/>
-        <rect x='100' y='616' width='217.405' height='7'/>
+        <rect x='100' y='76' width='214.644' height='7'/>
+        <rect x='100' y='130' width='83.140' height='7'/>
+        <rect x='100' y='184' width='5.297' height='7'/>
+        <rect x='100' y='238' width='96.470' height='7'/>
+        <rect x='100' y='292' width='43.492' height='7'/>
+        <rect x='100' y='346' width='6.066' height='7'/>
+        <rect x='100' y='400' width='97.068' height='7'/>
+        <rect x='100' y='454' width='109.971' height='7'/>
+        <rect x='100' y='508' width='189.865' height='7'/>
+        <rect x='100' y='562' width='142.356' height='7'/>
+        <rect x='100' y='616' width='195.077' height='7'/>
       </g>
       <g fill='#cc6'>
-        <rect x='100' y='83' width='205.786' height='7'/>
-        <rect x='100' y='137' width='95.259' height='7'/>
-        <rect x='100' y='191' width='6.337' height='7'/>
-        <rect x='100' y='245' width='132.133' height='7'/>
-        <rect x='100' y='299' width='49.454' height='7'/>
-        <rect x='100' y='353' width='7.682' height='7'/>
-        <rect x='100' y='407' width='131.653' height='7'/>
-        <rect x='100' y='461' width='143.752' height='7'/>
-        <rect x='100' y='515' width='171.696' height='7'/>
-        <rect x='100' y='569' width='157.868' height='7'/>
-        <rect x='100' y='623' width='122.818' height='7'/>
+        <rect x='100' y='83' width='185.080' height='7'/>
+        <rect x='100' y='137' width='84.337' height='7'/>
+        <rect x='100' y='191' width='5.639' height='7'/>
+        <rect x='100' y='245' width='119.114' height='7'/>
+        <rect x='100' y='299' width='43.578' height='7'/>
+        <rect x='100' y='353' width='6.750' height='7'/>
+        <rect x='100' y='407' width='120.054' height='7'/>
+        <rect x='100' y='461' width='130.137' height='7'/>
+        <rect x='100' y='515' width='156.113' height='7'/>
+        <rect x='100' y='569' width='140.903' height='7'/>
+        <rect x='100' y='623' width='114.585' height='7'/>
       </g>
       <g fill='#da4'>
-        <rect x='100' y='90' width='88.345' height='7'/>
-        <rect x='100' y='144' width='97.275' height='7'/>
-        <rect x='100' y='198' width='174.961' height='7'/>
-        <rect x='100' y='252' width='94.106' height='7'/>
-        <rect x='100' y='306' width='185.524' height='7'/>
-        <rect x='100' y='360' width='176.402' height='7'/>
-        <rect x='100' y='414' width='94.778' height='7'/>
-        <rect x='100' y='468' width='93.242' height='7'/>
-        <rect x='100' y='522' width='93.434' height='7'/>
-        <rect x='100' y='576' width='167.183' height='7'/>
-        <rect x='100' y='630' width='93.338' height='7'/>
+        <rect x='100' y='90' width='79.039' height='7'/>
+        <rect x='100' y='144' width='88.523' height='7'/>
+        <rect x='100' y='198' width='153.293' height='7'/>
+        <rect x='100' y='252' width='82.884' height='7'/>
+        <rect x='100' y='306' width='164.657' height='7'/>
+        <rect x='100' y='360' width='154.575' height='7'/>
+        <rect x='100' y='414' width='83.738' height='7'/>
+        <rect x='100' y='468' width='83.653' height='7'/>
+        <rect x='100' y='522' width='82.115' height='7'/>
+        <rect x='100' y='576' width='145.774' height='7'/>
+        <rect x='100' y='630' width='83.995' height='7'/>
       </g>
       <g fill='#24851d'>
-        <rect x='100' y='97' width='106.014' height='7'/>
-        <rect x='100' y='151' width='14.116' height='7'/>
-        <rect x='100' y='205' width='28.616' height='7'/>
-        <rect x='100' y='259' width='91.994' height='7'/>
-        <rect x='100' y='313' width='22.374' height='7'/>
-        <rect x='100' y='367' width='28.808' height='7'/>
-        <rect x='100' y='421' width='90.745' height='7'/>
-        <rect x='100' y='475' width='89.689' height='7'/>
-        <rect x='100' y='529' width='97.083' height='7'/>
-        <rect x='100' y='583' width='288.946' height='7'/>
-        <rect x='100' y='637' width='75.477' height='7'/>
+        <rect x='100' y='97' width='84.678' height='7'/>
+        <rect x='100' y='151' width='12.560' height='7'/>
+        <rect x='100' y='205' width='24.096' height='7'/>
+        <rect x='100' y='259' width='73.656' height='7'/>
+        <rect x='100' y='313' width='20.507' height='7'/>
+        <rect x='100' y='367' width='24.779' height='7'/>
+        <rect x='100' y='421' width='76.390' height='7'/>
+        <rect x='100' y='475' width='77.073' height='7'/>
+        <rect x='100' y='529' width='81.431' height='7'/>
+        <rect x='100' y='583' width='234.639' height='7'/>
+        <rect x='100' y='637' width='91.343' height='7'/>
       </g>
     </g>
     <rect stroke='#111' fill='none' x='100' y='56' width='400' height='594'/>
-    <g transform='translate(340,306)' text-anchor='start' font-size='13px'>
+    <g transform='translate(340,141)' text-anchor='start' font-size='13px'>
       <rect fill='white' stroke='#111' x='0' y='0' width='150' height='126'/>
       <g stroke='#111'>
         <rect fill='#6ad' x='10' y='14.5' width='18' height='7'/>

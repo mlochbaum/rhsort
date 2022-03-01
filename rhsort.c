@@ -122,14 +122,16 @@ void rhsort32(T *array, U n) {
     if (LIKELY(h==s)) { aux[j]=e; continue; }
 
     // Collision: find size of chain and position in it
+    // Reposition elements after e branchlessly during the search
     U j0=j, f=j;
     do {
-      j += e>=h;          // If we have to move past that entry
-      h = aux[++f];       // Next one
-    } while (RARE(h!=s)); // Until the end of the chain
-    // We'll insert at j. Move the values after that one forward.
-    for (U t=f; t>j; t--) aux[t] = aux[t-1];
-    aux[j]=e;
+      T n = aux[++f];  // Might write over this
+      int c = e>=h;    // If we have to move past that entry
+      j += c;          // Increments until e's final location found
+      aux[f-c] = h;    // Reposition h
+      h = n;
+    } while (h!=s); // Until the end of the chain
+    aux[j] = e;
     f += 1;  // To account for just-inserted e
 
 #ifndef BRAVE

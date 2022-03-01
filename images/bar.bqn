@@ -63,7 +63,7 @@ bars ← nd‿nn⥊pw×avg÷max
   Legend {
     isRH ⇐ isRH ⋄ label ⇐ names
     width ⇐ 150
-    place ⇐ ⟨w0+tw-10+width,h0+250⟩
+    place ⇐ ⟨w0+tw-10+width,h0+85⟩
     pad ⇐ 2 ÷˜ spacing ⇐ 11+bs
     Samples ⇐ Rect⟜{10‿(𝕩-bt÷2)≍18‿bt} _cBar
   }
