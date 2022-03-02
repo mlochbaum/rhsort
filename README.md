@@ -7,6 +7,8 @@ Robin Hood Sort is a stable numeric sorting algorithm that achieves performance 
 
 The version given here is only written for 4-byte integers and isn't well-tested. I don't recommend using it directly. Robin Hood Sort is mainly intended as an alternative algorithm when sampling has determined that an array is probably close enough to uniform, so I hope to integrate it into more reliable algorithms in the future.
 
+![Visualization](images/robinhood.gif)
+
 Compared below are merge sort [quadsort](https://github.com/scandum/quadsort), top-of-the-line hybrid quicksorts [pdqsort](https://github.com/orlp/pdqsort) and [fluxsort](https://github.com/scandum/fluxsort), and radix sorts [wolfsort](https://github.com/scandum/wolfsort) (also a bit of a hybrid) and [ska_sort_copy](https://probablydance.com/2016/12/02/investigating-radix-sort/) (note that most benchmarks are based on the slower in-place [ska_sort](https://probablydance.com/2017/01/17/faster-sorting-algorithm-part-2/)). If you're wondering, Timsort is no good with integer arrays like this, and single-core IPS⁴o loses to the quicksorts on random data.
 
 ![Performance bar chart](images/wolf.svg)
