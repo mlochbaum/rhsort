@@ -69,7 +69,7 @@ The RH graph here is split into a few parts. The large ones are insertion near t
 
 Horrible cases like this are easily detectable in a quicksort during median selection. Figuring out how bad it can get without being detectable from a sample will require some more benchmarks and statistics.
 
-### Algorithm
+## Algorithm
 
 The main idea of Robin Hood Sort is to allocate a buffer a few times (2.5 or more) larger than the array to be sorted, then send each entry to the appropriate position in the buffer for its value (to get this position, subtract the minimum value, then bitshift). If there's no room in that spot, move entries forward to find space for it, keeping everything in sorted order (that is, place the new entry after any smaller or equal ones, shifting larger ones forward by 1 to make room). Afterwards, the entries are put back in the list with branchless filtering to remove the gaps. The algorithm is named for [Robin Hood hashing](https://programming.guide/robin-hood-hashing.html), which does exactly the same thing to find space for hashes within a hash table. In fact, as Paul Khuong [writes](https://pvk.ca/Blog/2019/09/29/a-couple-of-probabilistic-worst-case-bounds-for-robin-hood-linear-probing/), "I like to think of Robin Hood hash tables with linear probing as arrays sorted on uniformly distributed keys, with gaps". The name for RH hashing comes from the idea that those shifted entries are "rich" because they got there first, and the new entry gets to rob a space from them. I don't think this is the best metaphor, [as I explained](https://youtu.be/paxIkKBzqBU?t=1340) in a talk on searching.
 
@@ -93,7 +93,7 @@ images/line.bqn res/r{_flux,p_rh}.txt > images/parts.svg
 
 Time taken in each section: from bottom to top, range-finding, buffer initialization, insertion, and filtering.
 
-### Analysis
+## Analysis
 
 Here we'll show that Robin Hood Sort can achieve O(n log log n) *average* time on random arrays with range at least twice the length (for smaller ranges, use counting/bucket sort and get guaranteed O(n) time), and O(n log(n)) worst-case time. And that it's stable. For practical purposes, that average time is effectively linear. Unfortunately, for practical purposes it's also not achieved: these times are based on the typical random-access model where reading or writing any value in memory takes constant time. Real-world random access scales more like `√n`, and this causes RH sort to lose ground against quicksorts as `n` increases, instead of gaining as theory would suggest.
 
@@ -111,7 +111,7 @@ It's not obvious, but buffer insertion is kept to O(n b) by the block-stealing m
 
 Merge sort has a well known worst case bound of O(n log n). This is where most of our cost comes from: in the worst case, nearly all values are snatched from the buffer and the cost reaches that bound. However, the expectation for uniform distributions is different: very few blocks should be stolen. To figure out what exactly the consequences are, we need to know something about the statistics of Robin Hood hashing.
 
-#### Average case
+### Average case
 
 The `n log log n` bound on average time requires setting a variable block size. But the size scales with `log log n`, that is, it hardly scales at all. And it's silly to apply RH sort to very large random arrays anyway because the cache patterns are horrible. So I'm sticking with a fixed block size in the actual implementation.
 
@@ -123,7 +123,7 @@ From lemma 5.4 [here](http://opendatastructures.org/ods-python/5_2_LinearHashTab
 
 The total time is now proportional to `n log log n`.
 
-#### Stability
+### Stability
 
 Sorting stability means that two equal values in the initial array maintain their order in the sorted array, that is, a value with a lower index isn't swapped with an equal value with a higher index. For the function `rhsort32` implemented here, it's meaningless: an integer can't remember where it came from. However, stability can be important when sorting one array of keys according to another array of values. Robin Hood Sort could probably be adapted to this use case, so it's nice that it's stable without any performance cost.
 
@@ -135,7 +135,7 @@ After insertion, filtering is obviously stable, and merging is well known to be 
 
 Since stability's meaningless for pure numeric sorting, `rhsort32` does include some non-stable optimizations. First, it uses counting sort for small ranges, which must be changed to bucket sort, that is, it should actually move values from the initial array instead of just reconstructing them from counts. Second, it uses the array's maximum for an "empty space" sentinel value in the buffer, and infers that any missing elements after filtering were equal to it. For a sort-by operation, it should be modified to one plus the maximum: it's fine if this overflows, but the full-range case where both minimum and maximum possible values are present has to be excluded somehow.
 
-### Variations
+## Variations
 
 The following options can be applied when compiling rhsort.c:
 
@@ -143,7 +143,7 @@ The following options can be applied when compiling rhsort.c:
 - Quad Robin (`-D QUADMERGE`) uses quadsort's methods for merging stolen blocks together, making the worst case significantly better, about 2ns/value worse than quadsort. It doesn't use `tail_merge32` for merging the blocks back in at the end, as it seems this slows things down.
 - Merge Robin (function `rhmergesort32`) is an O(n log(n)) merge sort hybrid that uses Robin Hood sort for sizes below 2<sup>16</sup>, then merges these units together. It's faster for large arrays, but only if `QUADMERGE` is also used.
 
-### Counting sort
+## Counting sort
 
 Because it relies on shifting values right to fit the range into the buffer, Robin Hood Sort begins to degrade when the range gets smaller than the buffer should be. This could be fixed with another loop that shifts left instead, but these ranges are a natural fit for counting sort, so it switches to that instead. To write the values out, a normal loop is used for high densities, while a strategy based on prefix sums is used for lower ones (it can be sped up [with SIMD instructions](https://en.algorithmica.org/hpc/algorithms/prefix/), but I haven't found a way to generate code like this without compiler intrinsics).
 
