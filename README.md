@@ -23,9 +23,9 @@ images/bar.bqn res/wolf.txt > images/wolf.svg
 
 </details>
 
-So Robin Hood is tested against the fastest sorting algorithms I know, on wolfsort's own benchmark suite. On the headline benchmark, well, ska_sort is hard to beat (has the sheep exchanged clothing with the wolf?). But against stable algorithms there's no contest! Robin Hood is very skilled—don't forget it—but his greatest skill is cheating.
+So Robin Hood is tested against the fastest sorting algorithms I know, on wolfsort's own benchmark suite. And ska_sort_copy is the only real contender (has the sheep exchanged clothing with the wolf?). Comparison sorts never stood a chance! Robin Hood is very skilled—don't forget it—but his greatest skill is cheating.
 
-It's an algorithm based on daring optimism: allocate more than enough space for all values, then simply try to place each one where it ought to go, numerically speaking ([details below](#algorithm)). If there's no room… then Robin Hood must rely on trickery.
+It's an algorithm based on daring optimism: allocate more than enough space for all values, then simply try to place each one where it ought to go, numerically speaking ([details below](#algorithm)). If there's no room… then Robin Hood must rely on trickery. First, here's how it scales on random data.
 
 ![Performance line plot](images/rand.svg)
 <details><summary><b>details</b></summary>
@@ -43,7 +43,9 @@ images/line.bqn res/r_{flux,wolf,ska_,rh}.txt > images/rand.svg
 
 </details>
 
-Here's how it scales on random data. Robin Hood is without equal under length 10,000 for this good—but not best—case. Beyond that the picture is not so nice because of the large buffer and scattershot approach in filling it. My L2 cache fits 128k 4-byte integers, and there's a clear increase as it's overwhelmed. But for the intended use this is no concern: fluxsort (like any quicksort) works by splitting the array in half, and sorting recursively. Switching to Robin Hood at the appropriate length would make an overall algorithm with fluxsort's very clean cache usage, and reduce the required buffer size as well. Imagine cutting off the right side of the fluxsort graph to affix it to Robin Hood's line lower down. The Quad Merge Robin [variant](#variations) does this with quadsort.
+Robin Hood is without equal under length 10,000 for this good—but not best—case. Beyond that the picture is not so nice because of the large buffer and scattershot approach in filling it. My L2 cache fits 128k 4-byte integers, and there's a clear increase as it's overwhelmed. But for the intended use this is no concern: fluxsort (like any quicksort) works by splitting the array in half, and sorting recursively. Switching to Robin Hood at the appropriate length would make an overall algorithm with fluxsort's very clean cache usage, and reduce the required buffer size as well. Imagine cutting off the right side of the fluxsort graph to affix it to Robin Hood's line lower down. The Quad Merge Robin [variant](#variations) does this with quadsort.
+
+As you might guess, "Asc. tiles" from the bar chart hints at a significant problem: the range can be clumpy instead of uniform. Here's my best guess at a worst case for RH sort: one very large element followed by many random small ones.
 
 ![Breakdown broken down](images/bad.svg)
 <details><summary><b>details</b></summary>
@@ -61,9 +63,9 @@ images/line.bqn res/{sp_rh,s_merge,s_quad,r_flux}.txt > images/bad.svg
 
 </details>
 
-As you might guess, "Asc. tiles" from the bar chart hints at a significant problem: the range can be clumpy instead of uniform. Above is my best guess at a worst case for RH sort: one very large element followed by many random small ones. These all get sent to the same index (with maybe a slight difference for very large arrays). But the Robin Hood algorithm has a mechanism to rescue them from the buffer, 16 values at a time. These values are then merge sorted. The buffer insertion amounts to an insertion sort on these blocks of 16, which is why it can be said that RH degrades to a bad hybrid merge sort.
+All these small elements get sent to the same index (with maybe a slight difference for very large arrays). But the Robin Hood algorithm has a mechanism to rescue them from the buffer, 16 values at a time. These values are then merge sorted. The buffer insertion amounts to an insertion sort on these blocks of 16, which is why it can be said that RH degrades to a bad hybrid merge sort.
 
-The RH graph here is split into a few parts. The large ones are insertion near the bottom and merging at the top. Also shown is a pure merge sort based on the same merging code. This merging code is not fast (for now at least), and a better method like quadsort would improve things a lot.
+The RH graph here is split into a few parts. The large ones are insertion near the bottom and merging at the top. Also shown is a pure merge sort based on the same merging code. This merging code is not fast (for now at least), but if you've downloaded quadsort using `./wolfbench.sh`, you can build with `-D QUADMERGE` to use it instead (see [variations](#variations)). Then it comes within about 1ns/value of quadsort.
 
 Horrible cases like this are easily detectable in a quicksort during median selection. Figuring out how bad it can get without being detectable from a sample will require some more benchmarks and statistics.
 
@@ -130,6 +132,8 @@ During buffer insertion, the values in the buffer have lower indices than those 
 Stolen values are placed at the beginning of the array, which doesn't reorder them with respect to an uninserted values but could break ordering with respect to the buffer. Equal values are always adjacent in the buffer, so we just need to be sure Robin Hood doesn't grab a trailing component of a group of equal values. The fix is to walk back to the beginning of the chain (or at least the previous unequal value, but this benchmarks worse) before stealing.
 
 After insertion, filtering is obviously stable, and merging is well known to be stable.
+
+Since stability's meaningless for pure numeric sorting, `rhsort32` does include some non-stable optimizations. First, it uses counting sort for small ranges, which must be changed to bucket sort, that is, it should actually move values from the initial array instead of just reconstructing them from counts. Second, it uses the array's maximum for an "empty space" sentinel value in the buffer, and infers that any missing elements after filtering were equal to it. For a sort-by operation, it should be modified to one plus the maximum: it's fine if this overflows, but the full-range case where both minimum and maximum possible values are present has to be excluded somehow.
 
 ### Variations
 
