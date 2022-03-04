@@ -142,7 +142,7 @@ Since stability's meaningless for pure numeric sorting, `rhsort32` does include 
 The following options can be applied when compiling rhsort.c:
 
 - Brave Robin (`-D BRAVE`) disables block stealing, leading to O(n) average case performance (like hash table insertion) and O(n²) worst case. It needs to allocate and initialize more memory because overflows can be longer, leading to slower actual performance except at small sizes.
-- Quad Robin (`-D QUADMERGE`) uses quadsort's methods for merging stolen blocks together, making the worst case significantly better, about 2ns/value worse than quadsort. It doesn't use `tail_merge32` for merging the blocks back in at the end, as it seems this slows things down.
+- Quad Robin (`-D QUADMERGE`) uses quadsort's methods for merging stolen blocks together, making the worst case significantly better, only 1 to 2ns/value worse than quadsort.
 - Merge Robin (function `rhmergesort32`) is an O(n log(n)) merge sort hybrid that uses Robin Hood sort for sizes below 2<sup>16</sup>, then merges these units together. It's faster for large arrays, but only if `QUADMERGE` is also used.
 
 ## Counting sort

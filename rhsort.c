@@ -16,8 +16,16 @@ typedef size_t U;
 // Minimum size to steal from buffer
 static const U BLOCK = 16;
 
+#if QUADMERGE
+  #define cmp(a,b) (*(a) > *(b))
+  #include "wolfsort/src/quadsort.h" // Call wolfbench.sh
+#endif
+
 // Merge arrays of length l and n-l starting at a, using buffer aux.
 static void merge(T *a, U l, U n, T *aux) {
+#if QUADMERGE
+  partial_backward_merge32(a, aux, n, l, NULL);
+#else
   // Easy cases when the merge can be avoided
   // If the buffer helping at all, most merges go through these
   if (a[l-1] <= a[l]) return;
@@ -34,12 +42,8 @@ static void merge(T *a, U l, U n, T *aux) {
     else 
       a[i] = a[bi++];
   }
-}
-
-#if QUADMERGE
-  #define cmp(a,b) (*(a) > *(b))
-  #include "wolfsort/src/quadsort.h" // Call wolfbench.sh
 #endif
+}
 
 // Merge array x of size n, if units of length block are pre-sorted
 static void mergefrom(T *x, U n, U block, T *aux) {
