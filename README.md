@@ -67,7 +67,7 @@ images/line.bqn res/{sp_rh,s_merge,s_quad,r_flux}.txt > images/bad.svg
 
 All these small elements get sent to the same index (with maybe a slight difference for very large arrays). But the Robin Hood algorithm has a mechanism to rescue them from the buffer, 16 values at a time. These values are then merge sorted. The buffer insertion amounts to an insertion sort on these blocks of 16, which is why it can be said that RH degrades to a bad hybrid merge sort.
 
-The RH graph here is split into a few parts. The large ones are insertion near the bottom and merging at the top. Also shown is a pure merge sort based on the same merging code. This merging code is not fast (for now at least), but if you've downloaded quadsort using `./wolfbench.sh`, you can build with `-D QUADMERGE` to use it instead (see [variations](#variations)). Then it comes within about 1ns/value of quadsort—the 2ns/v of insertion work pays for itself and then some relative to the poorly optimized merge sort, but is only worth about 1ns/v of quadsort time.
+The RH graph here is split into a few parts. The large ones are insertion near the bottom and merging at the top. Also shown is a pure merge sort based on the same merging code. This merging code is not fast (for now at least), but if you've downloaded quadsort using `./wolfbench.sh`, you can build with `-D QUADMERGE` to use it instead (see [variations](#variations)). Then it comes within about 10ns/value of quadsort—the 20ns/v of insertion work pays for itself and then some relative to the poorly optimized merge sort, but is only worth about 10ns/v of quadsort time.
 
 Horrible cases like this are easily detectable in a quicksort during median selection. Figuring out how bad it can get without being detectable from a sample will require some more benchmarks and statistics.
 
@@ -142,7 +142,7 @@ Since stability's meaningless for pure numeric sorting, `rhsort32` does include 
 The following options can be applied when compiling rhsort.c:
 
 - Brave Robin (`-D BRAVE`) disables block stealing, leading to O(n) average case performance (like hash table insertion) and O(n²) worst case. It needs to allocate and initialize more memory because overflows can be longer, leading to slower actual performance except at small sizes.
-- Quad Robin (`-D QUADMERGE`) uses quadsort's methods for merging stolen blocks together, making the worst case significantly better, only 1 to 2ns/value worse than quadsort.
+- Quad Robin (`-D QUADMERGE`) uses quadsort's methods for merging stolen blocks together, making the worst case significantly better, only 10 to 20ns/value worse than quadsort.
 - Merge Robin (function `rhmergesort32`) is an O(n log(n)) merge sort hybrid that uses Robin Hood sort for sizes below 2<sup>16</sup>, then merges these units together. It's faster for large arrays, but only if `QUADMERGE` is also used.
 
 ## Counting sort
