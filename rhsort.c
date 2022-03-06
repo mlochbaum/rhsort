@@ -18,7 +18,7 @@ static const U BLOCK = 16;
 
 #if QUADMERGE
   #define cmp(a,b) (*(a) > *(b))
-  #include "wolfsort/src/quadsort.h" // Call wolfbench.sh
+  #include "quadsort_mod.h" // Call wolfbench.sh
 #endif
 
 // Merge arrays of length l and n-l starting at a, using buffer aux.
@@ -71,6 +71,7 @@ static void count(T *x, U n, T min, U range) {
     for (U i=0; i<n; i++) { count[x[i]-min]++; x[i]=0; }
     // Write differences to x
     x[0] = min;
+    U end=range-1; while (count[end]==0) end--; // Assume n>0
     for (U i=0, s=0; i<range-1; i++) { s+=count[i]; x[s]++; }
     // Prefix sum
     { U i=0;
