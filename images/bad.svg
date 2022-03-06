@@ -9,27 +9,16 @@
       <path d='M204.8 0v281.6'/>
       <path d='M307.2 0v281.6'/>
       <path d='M409.6 0v281.6'/>
-      <path d='M0 269.045h512'/>
       <path d='M0 256.490h512'/>
-      <path d='M0 243.935h512'/>
       <path d='M0 231.381h512'/>
-      <path d='M0 218.826h512'/>
       <path d='M0 206.271h512'/>
-      <path d='M0 193.717h512'/>
       <path d='M0 181.162h512'/>
-      <path d='M0 168.607h512'/>
       <path d='M0 156.052h512'/>
-      <path d='M0 143.498h512'/>
       <path d='M0 130.943h512'/>
-      <path d='M0 118.388h512'/>
       <path d='M0 105.834h512'/>
-      <path d='M0 93.279h512'/>
       <path d='M0 80.724h512'/>
-      <path d='M0 68.169h512'/>
       <path d='M0 55.615h512'/>
-      <path d='M0 43.060h512'/>
       <path d='M0 30.505h512'/>
-      <path d='M0 17.951h512'/>
       <path d='M0 5.396h512'/>
     </g>
     <g font-size='11px'>
@@ -40,27 +29,16 @@
       <text dy='0.33em' x='409.6' y='291.1'>1e6</text>
       <text dy='0.33em' x='512' y='291.1'>1e7</text>
       <g text-anchor='end'>
-        <text dy='0.33em' x='-6' y='269.045'>5</text>
         <text dy='0.33em' x='-6' y='256.490'>10</text>
-        <text dy='0.33em' x='-6' y='243.935'>15</text>
         <text dy='0.33em' x='-6' y='231.381'>20</text>
-        <text dy='0.33em' x='-6' y='218.826'>25</text>
         <text dy='0.33em' x='-6' y='206.271'>30</text>
-        <text dy='0.33em' x='-6' y='193.717'>35</text>
         <text dy='0.33em' x='-6' y='181.162'>40</text>
-        <text dy='0.33em' x='-6' y='168.607'>45</text>
         <text dy='0.33em' x='-6' y='156.052'>50</text>
-        <text dy='0.33em' x='-6' y='143.498'>55</text>
         <text dy='0.33em' x='-6' y='130.943'>60</text>
-        <text dy='0.33em' x='-6' y='118.388'>65</text>
         <text dy='0.33em' x='-6' y='105.834'>70</text>
-        <text dy='0.33em' x='-6' y='93.279'>75</text>
         <text dy='0.33em' x='-6' y='80.724'>80</text>
-        <text dy='0.33em' x='-6' y='68.169'>85</text>
         <text dy='0.33em' x='-6' y='55.615'>90</text>
-        <text dy='0.33em' x='-6' y='43.060'>95</text>
         <text dy='0.33em' x='-6' y='30.505'>100</text>
-        <text dy='0.33em' x='-6' y='17.951'>105</text>
         <text dy='0.33em' x='-6' y='5.396'>110</text>
       </g>
     </g>

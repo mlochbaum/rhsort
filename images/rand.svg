@@ -11,7 +11,9 @@
       <path d='M409.6 0v281.6'/>
       <path d='M0 264.937h512'/>
       <path d='M0 242.823h512'/>
+      <path d='M0 209.478h512'/>
       <path d='M0 174.131h512'/>
+      <path d='M0 133.948h512'/>
       <path d='M0 105.438h512'/>
       <path d='M0 65.256h512'/>
       <path d='M0 36.746h512'/>
@@ -27,7 +29,9 @@
       <g text-anchor='end'>
         <text dy='0.33em' x='-6' y='264.937'>4</text>
         <text dy='0.33em' x='-6' y='242.823'>5</text>
+        <text dy='0.33em' x='-6' y='209.478'>7</text>
         <text dy='0.33em' x='-6' y='174.131'>10</text>
+        <text dy='0.33em' x='-6' y='133.948'>15</text>
         <text dy='0.33em' x='-6' y='105.438'>20</text>
         <text dy='0.33em' x='-6' y='65.256'>30</text>
         <text dy='0.33em' x='-6' y='36.746'>40</text>
