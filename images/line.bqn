@@ -3,7 +3,8 @@
 util ← •Import "util.bqn"
 Num‿Pos‿SVG‿Ge‿Text‿TSize‿Path‿Background‿Outline‿Legend‿Tick ← util
 
-files‿opts ← 2 ↑ ('-'=⊑¨)⊸⊔ •args
+files‿opts ← 2 ↑ ('-'=⊑¨)⊸⊔ •args ⋄ opts 1⊸↓¨↩
+GetOpt ← { l←≠𝕩 ⋄ (l+1)↓¨(𝕩≡l↑⊢)¨⊸/opts }
 input ← •wdpath⊸•file.At¨ files
 n ← ≠input
 
@@ -39,8 +40,10 @@ x ← ⊏⊑dat
 type ← ⌈´ tind
 title ← ((⊑tind⊐type) ⊑ info).title
 
-xr ← 2=type  # x indicates range
-logy←∧´1=yn←1-˜≠¨dat  # Don't use log-scale y to show parts
+xr ← 2=type                 # If x indicates range instead of length
+hasparts ← ∧´1=yn←1-˜≠¨dat  # If there's any profiling information
+ylog ← hasparts             # Don't use log-scale y to show parts
+{ylog↩"0"≢𝕩}¨ GetOpt "ylog"
 
 x (2⋆13)⊸÷⍟xr↩
 
@@ -53,11 +56,11 @@ off ← 50‿40 ⋄ end ← 20‿46
 gr ← "stroke-width=1.2|font-size=14px|text-anchor=middle"
 TT ← < TSize⊸∾⟜(Pos(width÷2)⊸⋈)´⊸Text
 
-Log ← ⋆⁼⌾(logy⊑⊑‿⊢)
-win ← -˜`¨ bounds ← 0⌾(⊑1⊑⊢)⍟(¬logy) (⌊´≍⌈´)∘⥊¨ Log xy ← ⟨x, ∾1↓¨dat⟩
+Log ← ⋆⁼⌾(ylog⊑⊑‿⊢)
+win ← -˜`¨ bounds ← 0⌾(⊑1⊑⊢)⍟(¬ylog) (⌊´≍⌈´)∘⥊¨ Log xy ← ⟨x, ∾1↓¨dat⟩
 dim ← width (⊣⋈×) 0.55
 out ← (-off)≍dim+off+end
-padb ← logy × padi  ← 0‿20
+padb ← ylog × padi  ← 0‿20
 Scale ← padi+(dim-padb+padi)× ({¬𝕏}⌾(1⊸⊑) {𝕩÷˜𝕨-˜⊢}´¨ win) {𝕎𝕩}¨ Log
 line ← (<≍˘)⎉1○Num´ Scale xy
 lstyle ← (((↓≍"stroke-width"‿"1.4")⊏˜∊⌾⌽) ∾¨ ⊏⟜col) /yn
@@ -74,11 +77,11 @@ lstyle ← (((↓≍"stroke-width"‿"1.4")⊏˜∊⌾⌽) ∾¨ ⊏⟜col) /yn
     orient⇐"vh"
     tpos ⇐ Scale ticks ← ⟨
       {xr ? 2⋆10-↕20 ; 10⋆2+↕6}
-      {logy ? (1+↕5)∾10×1+↕8 ; 5×1+↕30}
+      {ylog ? (1+↕5)∾10×1+↕8 ; 5×1+↕30}
     ⟩
     ttext ⇐ ⟨1e3⊸<◶Num‿("1e"∾'0'+·⌊0.5+10⋆⁼⊢)¨, Num⟩ {𝕎𝕩}¨ ticks
   }
-  { logy?⟨⟩;
+  { hasparts?⟨⟩;
     Area ← ∾∘⥊ ("M "∾"HV"»"L "⎉1) ∾¨ (Num dim-padb)⊸∾
     st ← "opacity"‿"0.2"⊸≍¨(yn-1)/"fill"⊸⋈¨colors
     "stroke=none" Ge st Path⟜Area¨ (¬∊/yn)/line
