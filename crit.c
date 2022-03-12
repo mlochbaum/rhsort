@@ -131,8 +131,19 @@ U rhcrit(T *x, U n, U c, U seed) {
   return score;
 }
 
+#ifndef LENGTH
+  #define LENGTH 10000
+#endif
+
 int main(int argc, char **argv) {
-  U n = 10000, cand = 100, iter = 200, checks = 1+10*100;
+  U n = LENGTH, iter = 1+2000000/(20+n), checks = 1+10*100;
+#ifdef SAMPLE
+  U cand = SAMPLE;
+#else
+  U cand=1;  // floor(sqrt(n)) by binary search
+  while (4*cand*cand<=n) cand*=2;
+  for (U c=cand;c;c/=2) if ((c+cand)*(c+cand)<=n) cand+=c;
+#endif
   U rounds = argc>1 ? atoi(argv[1]) : 150;
   printf("Checking %ld candidates out of %ld values\n", cand, n);
   U s = n*sizeof(T), si=(n+iter-1)*sizeof(T);
