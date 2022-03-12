@@ -5,7 +5,7 @@ Robin Hood Sort is a stable numeric sorting algorithm that achieves performance 
     Best     Average        Worst       Memory      Stable      Deterministic
     n        n log log n    n log n     n           Yes         Yes
 
-The version given here is only written for 4-byte integers and isn't well-tested. I don't recommend using it directly. Robin Hood Sort is mainly intended as an alternative base case for recursive sorts when sampling has determined that an array is probably close enough to uniform, so I hope to integrate it into more sophisticated algorithms in the future.
+While this repository is only for demonstration and testing purposes, it appears that RH sort is of significant practical use. Poorly performing cases can be [detected](#statistical-detection) with good probability from a random sample of `√n` values—that's an exact, not asymptotic, count—selected from an array of length `n` and then sorted. This test is integrated into pivot selection as part of [distribution crumsort](https://github.com/mlochbaum/distcrum) (a high-performance quicksort), allowing RH to be used as an alternate base case.
 
 ![Visualization](images/robinhood.gif)
 
@@ -162,6 +162,16 @@ images/line.bqn res/c_{quad,flux,rh}.txt > images/range.svg
 ```
 
 </details>
+
+## Statistical detection
+
+When Robin Hood performs poorly, the root cause is too many buffer collisions, that is to say, too many values that are close to each other in the buffer. But if that's the case, it should show in a random sample of enough values from the array. As it turns out, a sample of size `√n` is enough, because each of the roughly `n/2` *pairs* of values can be tested. The metric, or score, used considers the block size of 16 to be the threshold for a pair to count as a collision. If the distance `d` between a pair of samples is less than that, then it counts for `16-d` points in the score. The sum over all pairs can be computed efficiently by sorting the sample, then scanning over it (this gets slow if many points are close to each other, but we can exit early if the total exceeds the maximum allowed).
+
+In the following tests, piecewise-linear distributions are generated using a strategy that allows for large dense regions and gaps. On each distribution, a single average sorting time is measured, and many samples are taken to find a distribution of scores. The uniform cases at the very bottom of the graphs are well separated from the ones that do worse than fluxsort. A score threshold between 70 and 100 is sufficient to accept the good cases while keeping the chance of slowdown on a bad array small.
+
+![Criterion performance 100/10000](images/crit.svg)
+
+![Criterion performance 316/100000](images/crit5.svg)
 
 ## History
 
