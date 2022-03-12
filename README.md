@@ -183,8 +183,8 @@ images/scatter.bqn res/crit.txt > images/crit.svg
 <details><summary><b>details</b></summary>
 
 ```
-gcc -D LENGTH=100000 -D QUADMERGE -D NOTEST -O3 crit.c && ./a.out > res/crit.txt
-images/scatter.bqn res/crit.txt > images/crit.svg
+gcc -D LENGTH=100000 -D QUADMERGE -D NOTEST -O3 crit.c && ./a.out > res/crit5.txt
+images/scatter.bqn res/crit5.txt > images/crit5.svg
 ```
 
 </details>
