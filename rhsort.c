@@ -188,7 +188,7 @@ void rhsort32(T *array, U n) {
   if (l) {
     // Sort x[0..l]
     PROF_START(4);
-    mergefrom(x, n, BLOCK, aux);
+    mergefrom(x, l, BLOCK, aux);
     // And merge with the rest of x
     merge(x, l, n, aux);
     PROF_END(4);

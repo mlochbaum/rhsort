@@ -39,10 +39,16 @@
 // Options for test to perform:
 #if RANGES  // Small range
   #define datadesc "10,000 small-range 4-byte integers"
-#elif WORSE // RH worst case
+#elif WORST // RH worst case
   #define datadesc "small-range plus outlier"
 #else       // Random
   #define datadesc "random 4-byte integers"
+#endif
+
+#if WORST
+  #define MODIFY(arr) arr[0] = 3<<28
+#else
+  #define MODIFY(arr) (void)0
 #endif
 
 typedef size_t U;
@@ -181,8 +187,8 @@ int main(int argc, char **argv) {
 #endif
     // Test
 #ifndef NOTEST
-    memcpy(sort, data, s); sort32(sort, n);
-    memcpy(chk , data, s); qsort(chk, n, sizeof(T), cmpi);
+    memcpy(sort, data, s); MODIFY(sort); sort32(sort, n);
+    memcpy(chk , data, s); MODIFY(chk ); qsort(chk, n, sizeof(T), cmpi);
     for (U i=0; i<n; i++) if (sort[i]!=chk[i]) {
       printf("Fails at [%ld]: %d but should be %d! ", i, sort[i], chk[i]);
       break;
@@ -192,10 +198,7 @@ int main(int argc, char **argv) {
     U sum=0, best=0;
     PROF_INIT;
     for (U r=0; r<iter; r++) {
-      memcpy(sort, data+off+r, s);
-#if WORST
-      sort[0] = 3<<28;
-#endif
+      memcpy(sort, data+off+r, s); MODIFY(sort);
       U t = monoclock();
       sort32(sort, n);
       t = monoclock()-t;
