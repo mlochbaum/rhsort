@@ -20,6 +20,8 @@
   #define sortname "mergesort"
 #elif RHMERGESORT
   #define sortname "rhmergesort"
+#elif GLIDESORT
+  #define sortname "glidesort"
 #else
   #define sortname "rhsort"
 #endif
@@ -94,6 +96,10 @@ static void printprof(U denom) {
 #include "wolfsort/src/ska_sort.hpp"
 #endif
 
+#if GLIDESORT
+extern void glidesort(T *x, U n);
+#endif
+
 static void sort32(T *x, U n) {
 #if QUADSORT
   quadsort32(x, n, NULL);
@@ -115,6 +121,8 @@ static void sort32(T *x, U n) {
   free(aux);
 #elif RHMERGESORT
   rhmergesort32(x, n);
+#elif GLIDESORT
+  glidesort(x, n);
 #else
   rhsort32(x, n);
 #endif
