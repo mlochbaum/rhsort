@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-glidesort = "0.1.0"
+glidesort = { version = "0.1.0", features = ["unstable"] }
 
 [lib]
 crate-type = ["cdylib"]
+
+[profile.release]
+lto = "thin"
