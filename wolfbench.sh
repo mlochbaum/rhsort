@@ -13,5 +13,5 @@ then
 else
   cd wolfsort/src
 fi
-g++ -O3 -w -fpermissive bench.c -o ../../runwolfbench
+g++ -O3 -w -fpermissive -D SKIP_LONGS bench.c -o ../../runwolfbench
 echo "Created ./runwolfbench"
