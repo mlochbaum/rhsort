@@ -1,0 +1,50 @@
+Sorting small-range plus outlier: rhsort
+Testing size       34: best: 34.206 avg: 39.403 ns/v profile  1.221  2.528 24.307  3.625  2.854
+Testing size       45: best: 31.356 avg: 36.714 ns/v profile  0.996  2.040 21.283  4.237  4.500
+Testing size       59: best: 29.627 avg: 35.244 ns/v profile  0.894  1.568 19.497  3.246  7.246
+Testing size       77: best: 31.961 avg: 38.138 ns/v profile  0.752  1.799 18.738  4.305 10.382
+Testing size      100: best: 31.600 avg: 37.501 ns/v profile  0.688  1.385 17.749  3.320 12.693
+Testing size      130: best: 32.162 avg: 37.746 ns/v profile  0.608  1.071 16.930  2.574 15.276
+Testing size      169: best: 33.030 avg: 38.551 ns/v profile  0.563  1.041 15.855  3.619 16.470
+Testing size      219: best: 33.142 avg: 38.908 ns/v profile  0.524  0.828 15.461  2.813 18.514
+Testing size      284: best: 35.271 avg: 40.187 ns/v profile  0.495  0.670 15.052  2.180 21.204
+Testing size      369: best: 38.509 avg: 42.966 ns/v profile  0.471  0.762 14.893  3.208 23.168
+Testing size      479: best: 40.152 avg: 44.573 ns/v profile  0.447  0.593 14.643  2.481 26.039
+Testing size      622: best: 44.762 avg: 48.887 ns/v profile  0.435  0.672 14.643  3.719 29.115
+Testing size      808: best: 46.700 avg: 50.787 ns/v profile  0.426  0.516 14.648  2.866 32.100
+Testing size     1050: best: 50.026 avg: 54.342 ns/v profile  0.407  0.408 15.111  2.206 36.020
+Testing size     1365: best: 53.384 avg: 57.000 ns/v profile  0.397  0.612 15.038  3.353 37.455
+Testing size     1774: best: 54.948 avg: 59.252 ns/v profile  0.394  0.500 15.062  2.575 40.608
+Testing size     2306: best: 57.487 avg: 61.286 ns/v profile  0.389  0.397 15.124  1.981 43.308
+Testing size     2997: best: 60.257 avg: 64.181 ns/v profile  0.390  0.532 15.048  3.015 45.120
+Testing size     3896: best: 62.910 avg: 65.783 ns/v profile  0.395  0.400 15.175  2.345 47.417
+Testing size     5064: best: 64.696 avg: 68.946 ns/v profile  0.383  0.599 15.060  3.555 49.312
+Testing size     6583: best: 65.275 avg: 69.178 ns/v profile  0.392  0.450 14.868  2.749 50.689
+Testing size     8557: best: 67.214 avg: 70.615 ns/v profile  0.382  0.344 14.901  2.105 52.861
+Testing size    11124: best: 69.130 avg: 72.550 ns/v profile  0.381  0.607 14.685  3.232 53.628
+Testing size    14461: best: 68.904 avg: 72.159 ns/v profile  0.386  0.422 14.543  2.483 54.311
+Testing size    18799: best: 69.875 avg: 72.295 ns/v profile  0.381  0.324 14.323  1.901 55.355
+Testing size    24438: best: 70.919 avg: 73.928 ns/v profile  0.387  0.615 14.050  2.930 55.937
+Testing size    31769: best: 71.505 avg: 74.148 ns/v profile  0.389  0.404 14.342  2.251 56.755
+Testing size    41299: best: 74.452 avg: 76.542 ns/v profile  0.386  0.807 14.084  3.452 57.804
+Testing size    53688: best: 73.394 avg: 75.676 ns/v profile  0.386  0.503 13.984  2.631 58.167
+Testing size    69794: best: 74.533 avg: 76.649 ns/v profile  0.389  0.400 14.072  2.049 59.733
+Testing size    90732: best: 76.409 avg: 78.538 ns/v profile  0.390  1.162 14.101  3.237 59.642
+Testing size   117951: best: 75.963 avg: 78.163 ns/v profile  0.391  0.711 14.297  2.500 60.261
+Testing size   153336: best: 77.863 avg: 79.863 ns/v profile  0.626  0.587 14.544  1.969 62.133
+Testing size   199336: best: 81.414 avg: 83.930 ns/v profile  0.683  2.593 14.728  3.141 62.782
+Testing size   259136: best: 81.221 avg: 82.074 ns/v profile  0.637  1.602 14.897  2.418 62.519
+Testing size   336876: best: 88.226 avg: 89.444 ns/v profile  0.639  3.766 16.589  3.748 64.700
+Testing size   437938: best: 86.277 avg: 86.929 ns/v profile  0.507  2.098 16.484  2.876 64.963
+Testing size   569319: best: 88.117 avg: 88.314 ns/v profile  0.509  1.718 16.579  2.210 67.298
+Testing size   740114: best: 93.214 avg: 95.134 ns/v profile  0.489  4.289 19.590  3.542 67.223
+Testing size   962148: best: 93.172 avg: 93.211 ns/v profile  0.495  2.156 19.520  2.764 68.275
+Testing size  1250792: best: 94.877 avg: 94.991 ns/v profile  0.504  1.710 19.497  2.117 71.162
+Testing size  1626029: best:100.211 avg:101.180 ns/v profile  0.515  6.051 19.138  3.189 72.286
+Testing size  2113837: best: 99.281 avg: 99.330 ns/v profile  0.503  2.087 19.194  2.465 75.081
+Testing size  2747988: best:103.928 avg:104.185 ns/v profile  0.508  9.083 18.793  3.747 72.053
+Testing size  3572384: best:101.511 avg:101.511 ns/v profile  0.509  6.979 18.853  2.882 72.288
+Testing size  4644099: best:101.004 avg:101.004 ns/v profile  0.503  5.346 18.725  2.187 74.242
+Testing size  6037328: best:100.600 avg:100.600 ns/v profile  0.498  8.069 18.717  3.390 69.925
+Testing size  7848526: best: 98.732 avg: 98.732 ns/v profile  0.509  6.194 18.879  2.612 70.538
+Testing size 10000000: best: 97.901 avg: 97.901 ns/v profile  0.500  4.849 18.729  2.045 71.777

@@ -1,0 +1,50 @@
+Sorting small-range plus outlier: mergesort
+Testing size       34: best: 23.235 avg: 31.262 ns/v
+Testing size       45: best: 25.133 avg: 32.233 ns/v
+Testing size       59: best: 26.288 avg: 32.959 ns/v
+Testing size       77: best: 28.688 avg: 34.394 ns/v
+Testing size      100: best: 30.660 avg: 36.105 ns/v
+Testing size      130: best: 33.723 avg: 38.665 ns/v
+Testing size      169: best: 35.645 avg: 40.696 ns/v
+Testing size      219: best: 38.393 avg: 43.171 ns/v
+Testing size      284: best: 41.852 avg: 46.270 ns/v
+Testing size      369: best: 44.848 avg: 48.735 ns/v
+Testing size      479: best: 47.541 avg: 51.375 ns/v
+Testing size      622: best: 50.659 avg: 53.875 ns/v
+Testing size      808: best: 53.597 avg: 56.206 ns/v
+Testing size     1050: best: 57.669 avg: 59.706 ns/v
+Testing size     1365: best: 58.693 avg: 60.684 ns/v
+Testing size     1774: best: 61.284 avg: 63.286 ns/v
+Testing size     2306: best: 63.893 avg: 66.061 ns/v
+Testing size     2997: best: 65.908 avg: 67.834 ns/v
+Testing size     3896: best: 68.160 avg: 69.856 ns/v
+Testing size     5064: best: 69.762 avg: 71.831 ns/v
+Testing size     6583: best: 71.355 avg: 72.942 ns/v
+Testing size     8557: best: 73.817 avg: 75.363 ns/v
+Testing size    11124: best: 74.161 avg: 75.814 ns/v
+Testing size    14461: best: 75.180 avg: 76.422 ns/v
+Testing size    18799: best: 76.592 avg: 77.715 ns/v
+Testing size    24438: best: 76.960 avg: 78.098 ns/v
+Testing size    31769: best: 77.534 avg: 78.752 ns/v
+Testing size    41299: best: 78.939 avg: 80.070 ns/v
+Testing size    53688: best: 79.485 avg: 80.547 ns/v
+Testing size    69794: best: 80.960 avg: 81.894 ns/v
+Testing size    90732: best: 80.931 avg: 81.817 ns/v
+Testing size   117951: best: 81.347 avg: 82.302 ns/v
+Testing size   153336: best: 83.154 avg: 83.694 ns/v
+Testing size   199336: best: 83.605 avg: 84.310 ns/v
+Testing size   259136: best: 84.647 avg: 85.115 ns/v
+Testing size   336876: best: 86.580 avg: 87.102 ns/v
+Testing size   437938: best: 86.799 avg: 87.128 ns/v
+Testing size   569319: best: 89.159 avg: 89.747 ns/v
+Testing size   740114: best: 88.959 avg: 89.719 ns/v
+Testing size   962148: best: 90.549 avg: 91.260 ns/v
+Testing size  1250792: best: 94.507 avg: 95.048 ns/v
+Testing size  1626029: best: 95.677 avg: 96.087 ns/v
+Testing size  2113837: best: 98.661 avg: 99.071 ns/v
+Testing size  2747988: best: 96.722 avg: 97.141 ns/v
+Testing size  3572384: best: 98.763 avg: 98.763 ns/v
+Testing size  4644099: best:100.434 avg:100.434 ns/v
+Testing size  6037328: best: 99.634 avg: 99.634 ns/v
+Testing size  7848526: best:100.360 avg:100.360 ns/v
+Testing size 10000000: best:102.776 avg:102.776 ns/v
