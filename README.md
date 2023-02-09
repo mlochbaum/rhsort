@@ -25,7 +25,7 @@ images/bar.bqn res/wolf.txt > images/wolf.svg
 
 </details>
 
-So Robin Hood is tested against the fastest sorting algorithms I know, on wolfsort's own benchmark suite. And ska_sort_copy is the only real contender (has the sheep exchanged clothing with the wolf?). Comparison sorts never stood a chance! Robin Hood is very skilled—don't forget it—but his greatest skill is cheating.
+So Robin Hood is tested against the fastest sorting algorithms I know, on wolfsort's own benchmark suite. And ska_sort_copy is the only real contender on random data (has the sheep exchanged clothing with the wolf?). Comparison sorts never stood a chance! Robin Hood is very skilled—don't forget it—but his greatest skill is cheating.
 
 The method is based on daring optimism: allocate more than enough space for all values, then simply try to place each one where it ought to go, numerically speaking ([details below](#algorithm)). If there's no room… then Robin Hood must rely on trickery. First, here's how it scales on random data.
 

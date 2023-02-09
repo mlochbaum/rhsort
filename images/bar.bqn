@@ -28,7 +28,8 @@ names‿colors‿isRH ← util.ProcName ¯4 ↓¨ ⍷name
 dists ← PD¨⍷dist
 
 # Create the plot
-max ← ⌈´ avg •BQN¨↩
+noMax ← ⥊ (dists∊"Asc. saw"‿"Desc. saw") ∧⌜ names∊⋈"pdqsort" # too slow
+max ← ⌈´ (¬noMax) / avg •BQN¨↩
 
 nn‿nd ← ≠¨names‿dists
 bt←bs←7 ⋄ gs←12+nn×bs
