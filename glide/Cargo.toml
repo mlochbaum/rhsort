@@ -1,10 +1,10 @@
 [package]
 name = "glide"
-version = "0.1.0"
+version = "0.1.2"
 edition = "2021"
 
 [dependencies]
-glidesort = { version = "0.1.0", features = ["unstable"] }
+glidesort = { version = "0.1.2", features = ["unstable"] }
 
 [lib]
 crate-type = ["cdylib"]
